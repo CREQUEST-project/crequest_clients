@@ -25,7 +25,22 @@ const routes = [
         path: '/query-care',
         name: 'QueryCare',
         component: () => import('@/views/QueryCare.vue')
-    }
+    },
+    {
+        path: '/motif-sampler',
+        name: 'MotifSampler',
+        component: () => import('@/views/MotifSampler.vue')
+    },
+    {
+        path: '/motif-details/:id',
+        name: 'MotifDetails',
+        component: () => import('@/views/MotifDetails.vue')
+    },
+    {
+        path: '/history',
+        name: 'History',
+        component: () => import('@/views/History.vue')
+    },
 ]
 
 const router = createRouter({

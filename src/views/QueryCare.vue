@@ -1,3 +1,44 @@
+<script setup lang="ts">
+import { ref } from "vue";
+import Datepicker from "vue3-datepicker";
+
+const uniqueIdentifier = ref("");
+const briefDescription = ref("");
+const keywords = ref("");
+const plantName = ref("");
+const authorName = ref("");
+const reportTitle = ref("");
+const bibliographicInfo = ref("");
+const accessionNumber = ref("");
+const updateDate = ref(new Date());
+
+function handleSubmit() {
+  console.log({
+    uniqueIdentifier: uniqueIdentifier.value,
+    briefDescription: briefDescription.value,
+    keywords: keywords.value,
+    plantName: plantName.value,
+    authorName: authorName.value,
+    reportTitle: reportTitle.value,
+    bibliographicInfo: bibliographicInfo.value,
+    accessionNumber: accessionNumber.value,
+    updateDate: updateDate.value,
+  });
+}
+
+function handleReset() {
+  uniqueIdentifier.value = "";
+  briefDescription.value = "";
+  keywords.value = "";
+  plantName.value = "";
+  authorName.value = "";
+  reportTitle.value = "";
+  bibliographicInfo.value = "";
+  accessionNumber.value = "";
+  updateDate.value = new Date();
+}
+</script>
+
 <template>
   <div class="min-h-screen flex flex-col items-center bg-gray-50 py-12">
     <div class="bg-white p-8 rounded-lg shadow-md max-w-4xl w-full">
@@ -24,7 +65,7 @@
             <Datepicker
               v-model="updateDate"
               :popup="true"
-              :input-class="`border border-gray-300 rounded-lg p-3 mt-2 outline-none focus:border-custom-green w-full`"
+              :class="`border border-gray-300 rounded-lg p-3 mt-2 outline-none focus:border-custom-green w-full`"
               :calendar-class="'custom-calendar'"
               :header-class="'custom-header'"
               :day-class="'custom-day'"
@@ -122,7 +163,7 @@
         </div>
 
         <!-- Buttons -->
-        <div class="flex justify-start space-x-4">
+        <div class="flex justify-center space-x-4">
           <button
             type="submit"
             class="bg-custom-green text-white py-2 px-8 rounded-lg hover:bg-green-700 font-semibold"
@@ -141,47 +182,6 @@
     </div>
   </div>
 </template>
-
-<script setup lang="ts">
-import { ref } from "vue";
-import Datepicker from "vue3-datepicker";
-
-const uniqueIdentifier = ref("");
-const briefDescription = ref("");
-const keywords = ref("");
-const plantName = ref("");
-const authorName = ref("");
-const reportTitle = ref("");
-const bibliographicInfo = ref("");
-const accessionNumber = ref("");
-const updateDate = ref(new Date());
-
-function handleSubmit() {
-  console.log({
-    uniqueIdentifier: uniqueIdentifier.value,
-    briefDescription: briefDescription.value,
-    keywords: keywords.value,
-    plantName: plantName.value,
-    authorName: authorName.value,
-    reportTitle: reportTitle.value,
-    bibliographicInfo: bibliographicInfo.value,
-    accessionNumber: accessionNumber.value,
-    updateDate: updateDate.value,
-  });
-}
-
-function handleReset() {
-  uniqueIdentifier.value = "";
-  briefDescription.value = "";
-  keywords.value = "";
-  plantName.value = "";
-  authorName.value = "";
-  reportTitle.value = "";
-  bibliographicInfo.value = "";
-  accessionNumber.value = "";
-  updateDate.value = new Date();
-}
-</script>
 
 <style scoped>
 .custom-calendar {
