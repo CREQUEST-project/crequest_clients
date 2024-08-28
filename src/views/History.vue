@@ -32,12 +32,12 @@
             <td
               class="px-6 py-4 text-sm font-medium text-gray-900 whitespace-normal break-words"
             >
-              <span>{{ history.pageContent }}</span>
+              <span>{{ history.sequences }}</span>
             </td>
             <td
               class="px-6 py-4 whitespace-nowrap text-center text-sm text-gray-500"
             >
-              {{ history.viewedOn }}
+              {{ history.created_at }}
             </td>
             <td
               class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium"
@@ -133,45 +133,26 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from "vue";
+import { ref, computed, onMounted } from "vue";
+import axios from "./../constants/Axios";
+import { useRouter } from "vue-router";
+
+const router = useRouter();
 
 // Sample data
 
-const text = ref(
-  "CTAATCTTATGCATTTAGCAGTACAAATTCAAAAATTTCCCATTTTTATTCATGAATCATACCATTATATATTAACTAAATCCAAGGTAAAAAAAAGGTATGAAAGCTCTATAGTAAGTAAAATATAAATTCCCCATAAGGAAAGGGCCAAGTCCACCAGGCAAGTAAAATG"
-);
-const historyData = ref([
-  {
-    pageContent:
-      "CTAATCTTATGCATTTAGCAGTACAAATTCAAAAATTTCCCATTTTTATTCATGAATCATACCATTATATATTAACTAAATCCAAGGTAAAAAAAAGGTATGAAAGCTCTATAGTAAGTAAAATATAAATTCCCCATAAGGAAAGGGCCAAGTCCACCAGGCAAGTAAAATG...",
-    viewedOn: "July 15, 2024, 2:57 p.m",
-  },
-  {
-    pageContent:
-      "CTAATCTTATGCATTTAGCAGTACAAATTCAAAAATTTCCCATTTTTATTCATGAATCATACCATTATATATTAACTAAATCCAAGGTAAAAAAAAGGTATGAAAGCTCTATAGTAAGTAAAATATAAATTCCCCATAAGGAAAGGGCCAAGTCCACCAGGCAAGTAAAATG...",
-    viewedOn: "July 15, 2024, 2:57 p.m",
-  },
-  {
-    pageContent:
-      "CTAATCTTATGCATTTAGCAGTACAAATTCAAAAATTTCCCATTTTTATTCATGAATCATACCATTATATATTAACTAAATCCAAGGTAAAAAAAAGGTATGAAAGCTCTATAGTAAGTAAAATATAAATTCCCCATAAGGAAAGGGCCAAGTCCACCAGGCAAGTAAAATG...",
-    viewedOn: "July 15, 2024, 2:57 p.m",
-  },
-  {
-    pageContent:
-      "CTAATCTTATGCATTTAGCAGTACAAATTCAAAAATTTCCCATTTTTATTCATGAATCATACCATTATATATTAACTAAATCCAAGGTAAAAAAAAGGTATGAAAGCTCTATAGTAAGTAAAATATAAATTCCCCATAAGGAAAGGGCCAAGTCCACCAGGCAAGTAAAATG...",
-    viewedOn: "July 15, 2024, 2:57 p.m",
-  },
-  {
-    pageContent:
-      "CTAATCTTATGCATTTAGCAGTACAAATTCAAAAATTTCCCATTTTTATTCATGAATCATACCATTATATATTAACTAAATCCAAGGTAAAAAAAAGGTATGAAAGCTCTATAGTAAGTAAAATATAAATTCCCCATAAGGAAAGGGCCAAGTCCACCAGGCAAGTAAAATG...",
-    viewedOn: "July 15, 2024, 2:57 p.m",
-  },
-  {
-    pageContent:
-      "CTAATCTTATGCATTTAGCAGTACAAATTCAAAAATTTCCCATTTTTATTCATGAATCATACCATTATATATTAACTAAATCCAAGGTAAAAAAAAGGTATGAAAGCTCTATAGTAAGTAAAATATAAATTCCCCATAAGGAAAGGGCCAAGTCCACCAGGCAAGTAAAATG...",
-    viewedOn: "July 15, 2024, 2:57 p.m",
-  },
-]);
+onMounted(async () => {
+  const user_id = localStorage.getItem("user_id");
+  const response = await axios.get(`user/${user_id}/search-for-care/histories`, {
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+    },
+  });
+
+  historyData.value = response.data.data;
+});
+
+const historyData = ref([]);
 
 // Pagination state
 const rowsPerPage = ref(5);
@@ -205,6 +186,7 @@ const deleteHistory = (index: number) => {
 };
 
 const viewHistory = (index: number) => {
+  router.push(`history/${index}`);
   console.log(historyData.value[startIndex.value + index]);
 };
 </script>

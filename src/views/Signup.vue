@@ -14,12 +14,13 @@
         Sign up
       </h2>
 
-      <form class="space-y-6">
+      <div class="space-y-6">
         <div>
           <label class="block text-gray-700 text-lg font-semibold mb-2"
             >Username</label
           >
           <input
+            v-model="username"
             type="text"
             placeholder="Username"
             class="w-full border-b-2 border-custom-green py-2 text-lg outline-none focus:border-blue-500"
@@ -31,6 +32,7 @@
             >Password</label
           >
           <input
+            v-model="password"
             type="password"
             placeholder="Password"
             class="w-full border-b-2 border-custom-green py-2 text-lg outline-none focus:border-blue-500"
@@ -48,12 +50,13 @@
         </ul>
 
         <button
+          @click="submitRegister"
           type="submit"
           class="w-full bg-custom-green text-white text-[36px] font-bold py-3 rounded-lg hover:bg-green-800"
         >
           Sign up
         </button>
-      </form>
+      </div>
 
       <p class="mt-8 text-center text-gray-600 text-lg">
         Already A Member?
@@ -64,5 +67,25 @@
 </template>
 
 <script setup lang="ts">
-// Không cần thêm logic bổ sung cho form này ở cấp độ cơ bản.
+import axios from "./../constants/Axios";
+import { ref } from "vue";
+
+const username = ref("");
+const password = ref("");
+
+const submitRegister = async () => {
+  try {
+    const response = await axios.post(
+      "/auth/register",
+      {
+        user_name: username.value,
+        password: password.value,
+        user_role_id: 2,
+      }
+    );
+    console.log(response.data);
+  } catch (error) {
+    console.error(error);
+  }
+};
 </script>

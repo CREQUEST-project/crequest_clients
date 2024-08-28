@@ -76,7 +76,7 @@
             class="absolute top-10 mt-2 w-48 bg-white text-black rounded-lg shadow-lg"
           >
             <a href="#" class="block px-4 py-2 hover:bg-gray-200">PROFILE</a>
-            <a href="#" class="block px-4 py-2 hover:bg-gray-200 text-red-500"
+            <a @click="logout" class="block px-4 py-2 hover:bg-gray-200 text-red-500"
               >LOG OUT</a
             >
           </div>
@@ -87,13 +87,22 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
-import { useRoute } from "vue-router";
+import { ref, onMounted } from "vue";
+import { useRoute, useRouter } from "vue-router";
+import { isLoggedIn } from "./../../stores/authStore";
 
 const route = useRoute();
-const isLoggedIn = ref(false);
+const router = useRouter();
+// const isLoggedIn = ref(false);
 const dropdownOpen = ref(false);
 const activeNav = ref("search-for-care");
+
+onMounted(() => {
+  const token = localStorage.getItem("token");
+  if (token) {
+    isLoggedIn.value = true;
+  }
+});
 
 function toggleDropdown() {
   dropdownOpen.value = !dropdownOpen.value;
@@ -107,5 +116,14 @@ function isActive(...paths: string[]) {
 
 function setActive(navItem: string) {
   activeNav.value = navItem;
+}
+
+function logout() {
+  localStorage.removeItem("token");
+  localStorage.removeItem("user_name");
+  localStorage.removeItem("user_id");
+  isLoggedIn.value = false;
+  dropdownOpen.value = false;
+  router.push("/login");
 }
 </script>

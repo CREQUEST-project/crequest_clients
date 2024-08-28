@@ -19,7 +19,12 @@ const routes = [
     {
         path: '/search-for-care',
         name: 'SearchForCare',
-        component: () => import('@/views/SearchForCare.vue')
+        component: () => import('@/views/SearchForCare.vue'),
+    },
+    {
+        path: '/results',
+        name: 'SearchForCareResults',
+        component: () => import('@/views/SearchForCareResult.vue')
     },
     {
         path: '/query-care',
@@ -41,6 +46,11 @@ const routes = [
         name: 'History',
         component: () => import('@/views/History.vue')
     },
+    {
+        path: '/history/:id',
+        name: 'HistoryDetails',
+        component: () => import('@/views/ViewHistory.vue')
+    }
 ]
 
 const router = createRouter({

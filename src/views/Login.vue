@@ -14,12 +14,13 @@
         Login
       </h2>
 
-      <form class="space-y-6">
+      <div class="space-y-6">
         <div>
           <label class="block text-gray-700 text-lg font-semibold mb-2"
             >Username</label
           >
           <input
+            v-model="username"
             type="text"
             placeholder="Username"
             class="w-full border-b-2 border-custom-green py-2 text-lg outline-none focus:border-blue-500"
@@ -31,6 +32,7 @@
             >Password</label
           >
           <input
+            v-model="password"
             type="password"
             placeholder="Password"
             class="w-full border-b-2 border-custom-green py-2 text-lg outline-none focus:border-blue-500"
@@ -38,12 +40,13 @@
         </div>
 
         <button
+          @click="Login"
           type="submit"
           class="w-full bg-custom-green text-white text-[36px] font-bold py-3 rounded-lg hover:bg-green-800"
         >
           Login
         </button>
-      </form>
+      </div>
 
       <p class="mt-8 text-center text-gray-600 text-lg">
         Forgot your password?
@@ -62,4 +65,48 @@
 
 <script setup lang="ts">
 // Không cần thêm logic bổ sung cho form này ở cấp độ cơ bản.
+import { ref } from "vue";
+import axios from "./../constants/Axios";
+import { useRouter } from "vue-router";
+import { isLoggedIn } from "./../stores/authStore"; 
+
+const username = ref("");
+const password = ref("");
+
+const loading = ref(false);
+const router = useRouter();
+
+const Login = async () => {
+  loading.value = true;
+  try {
+    const params = new URLSearchParams();
+    params.append("username", username.value);
+    params.append("password", password.value);
+    const response = await axios.post('/auth/login', params, {
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+    });
+
+    console.log('Login successful:', response.data);
+    localStorage.setItem('token', response.data.access_token);
+
+    const response2 = await axios.get('/auth/me', {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('token')}`,
+      },
+    });
+    localStorage.setItem('username', response2.data.user_name);
+    localStorage.setItem('user_id', response2.data.id);
+
+    isLoggedIn.value = true;
+
+    router.push('/');
+  } catch (error) {
+    console.error('Login failed:', error.response ? error.response.data : error.message);
+    alert('Login failed. Please check your credentials and try again.');
+  } finally {
+    loading.value = false;
+  }
+};
 </script>
