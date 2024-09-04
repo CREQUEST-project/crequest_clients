@@ -16,7 +16,7 @@
 
       <div class="space-y-6">
         <div>
-          <label class="block text-gray-700 text-lg font-semibold mb-2"
+          <label for="username" class="block text-gray-700 text-lg font-semibold mb-2"
             >Username</label
           >
           <input
@@ -28,12 +28,13 @@
         </div>
 
         <div>
-          <label class="block text-gray-700 text-lg font-semibold mb-2"
+          <label for="password" class="block text-gray-700 text-lg font-semibold mb-2"
             >Password</label
           >
           <input
             v-model="password"
             type="password"
+            id="password"
             placeholder="Password"
             class="w-full border-b-2 border-custom-green py-2 text-lg outline-none focus:border-blue-500"
           />
@@ -69,7 +70,9 @@ import { ref } from "vue";
 import axios from "./../constants/Axios";
 import { useRouter } from "vue-router";
 import { isLoggedIn } from "./../stores/authStore"; 
+import { useToast } from "vue-toastification";
 
+const toast = useToast();
 const username = ref("");
 const password = ref("");
 
@@ -101,10 +104,11 @@ const Login = async () => {
 
     isLoggedIn.value = true;
 
+    toast.success('Login successful!');
     router.push('/');
   } catch (error) {
     console.error('Login failed:', error.response ? error.response.data : error.message);
-    alert('Login failed. Please check your credentials and try again.');
+    toast.failed('Login failed. Please check your credentials and try again.');
   } finally {
     loading.value = false;
   }

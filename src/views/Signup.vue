@@ -16,7 +16,7 @@
 
       <div class="space-y-6">
         <div>
-          <label class="block text-gray-700 text-lg font-semibold mb-2"
+          <label for="username" class="block text-gray-700 text-lg font-semibold mb-2"
             >Username</label
           >
           <input
@@ -28,7 +28,7 @@
         </div>
 
         <div>
-          <label class="block text-gray-700 text-lg font-semibold mb-2"
+          <label for="password" class="block text-gray-700 text-lg font-semibold mb-2"
             >Password</label
           >
           <input
@@ -69,9 +69,13 @@
 <script setup lang="ts">
 import axios from "./../constants/Axios";
 import { ref } from "vue";
+import { useRouter } from "vue-router";
+import { useToast } from "vue-toastification";
 
 const username = ref("");
 const password = ref("");
+const router = useRouter();
+const toast = useToast();
 
 const submitRegister = async () => {
   try {
@@ -83,7 +87,10 @@ const submitRegister = async () => {
         user_role_id: 2,
       }
     );
-    console.log(response.data);
+    if (response.status === 200) {
+      toast.success("Registration successful!");
+      router.push("/login");
+    }
   } catch (error) {
     console.error(error);
   }
