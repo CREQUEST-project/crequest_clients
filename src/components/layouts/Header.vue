@@ -13,20 +13,20 @@
       <div class="flex items-center space-x-8 text-lg">
         <nav class="flex items-center space-x-8">
           <a
-            href="/query-care"
-            :class="isActive('/query-care')"
-            @click="setActive('query-care')"
+            href="/query-cre"
+            :class="isActive('/query-cre')"
+            @click="setActive('query-cre')"
             class="hover:text-gray-300"
           >
-            QUERY CARE
+            QUERY CRE
           </a>
           <a
-            href="/search-for-care"
-            :class="isActive('/search-for-care')"
-            @click="setActive('search-for-care')"
+            href="/search-for-cre"
+            :class="isActive('/search-for-cre')"
+            @click="setActive('search-for-cre')"
             class="hover:text-gray-300"
           >
-            SEARCH FOR CARE
+            SEARCH FOR CRE
           </a>
           <a
             href="/motif-sampler"
@@ -94,7 +94,7 @@ import { isLoggedIn } from "./../../stores/authStore";
 const route = useRoute();
 const router = useRouter();
 const dropdownOpen = ref(false);
-const activeNav = ref("search-for-care");
+const activeNav = ref("search-for-cre");
 
 onMounted(() => {
   const token = localStorage.getItem("token");

@@ -17,18 +17,18 @@ const routes = [
         component: () => import('@/views/Login.vue')
     },
     {
-        path: '/search-for-care',
-        name: 'SearchForCare',
+        path: '/search-for-cre',
+        name: 'SearchForCre',
         component: () => import('@/views/SearchForCare.vue'),
     },
     {
         path: '/results',
-        name: 'SearchForCareResults',
+        name: 'SearchForCreResults',
         component: () => import('@/views/SearchForCareResult.vue')
     },
     {
-        path: '/query-care',
-        name: 'QueryCare',
+        path: '/query-cre',
+        name: 'QueryCre',
         component: () => import('@/views/QueryCare.vue')
     },
     {
@@ -50,6 +50,11 @@ const routes = [
         path: '/history/:id',
         name: 'HistoryDetails',
         component: () => import('@/views/ViewHistory.vue')
+    },
+    {
+        path: '/about',
+        name: 'About',
+        component: () => import('@/views/About.vue')
     }
 ]
 

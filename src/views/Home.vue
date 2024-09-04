@@ -7,7 +7,7 @@
         SEARCH INFORMATION ABOUT MOTIFS
       </h1>
       <p class="text-lg text-gray-600 mb-8">
-        The QueryCARE function is accessible to any user. QueryCARE allows users
+        The QueryCRE function is accessible to any user. QueryCRE allows users
         to search information about motifs in the database.
       </p>
       <button

@@ -2,7 +2,7 @@
   <div class="min-h-screen py-10 bg-gray-50 flex flex-col items-center">
     <div class="w-full max-w-4xl bg-white p-8 rounded-lg shadow-md">
       <h1 class="text-4xl font-bold text-gray-900 mb-8">
-        {{ motifData.uniqueAccessionNumber }}
+        {{ motifData.ac }}
       </h1>
 
       <!-- Function Label -->
@@ -24,7 +24,7 @@
         <h2 class="text-lg font-bold text-gray-700">Unique accession number</h2>
         <hr class="border-t-2 border-gray-200 my-2" />
         <p class="text-base text-gray-900">
-          {{ motifData.uniqueAccessionNumber }}
+          {{ motifData.ac }}
         </p>
       </div>
 
@@ -32,7 +32,7 @@
       <div class="mb-6">
         <h2 class="text-lg font-bold text-gray-700">Date of update</h2>
         <hr class="border-t-2 border-gray-200 my-2" />
-        <p class="text-base text-gray-900">{{ motifData.dateOfUpdate }}</p>
+        <p class="text-base text-gray-900">{{ motifData.dt }}</p>
       </div>
 
       <!-- Brief Description of the Motif -->
@@ -41,14 +41,14 @@
           Brief description of the motif
         </h2>
         <hr class="border-t-2 border-gray-200 my-2" />
-        <p class="text-base text-gray-900">{{ motifData.briefDescription }}</p>
+        <p class="text-base text-gray-900">{{ motifData.de }}</p>
       </div>
 
       <!-- Keywords -->
       <div class="mb-6">
         <h2 class="text-lg font-bold text-gray-700">Keywords</h2>
         <hr class="border-t-2 border-gray-200 my-2" />
-        <p class="text-base text-gray-900">{{ motifData.keywords }}</p>
+        <p class="text-base text-gray-900">{{ motifData.kw }}</p>
       </div>
 
       <!-- Common Name and/or Scientific Name of Plant Species -->
@@ -57,7 +57,7 @@
           Common name and/or scientific name of plant specie
         </h2>
         <hr class="border-t-2 border-gray-200 my-2" />
-        <p class="text-base text-gray-900">{{ motifData.commonName }}</p>
+        <p class="text-base text-gray-900">{{ motifData.os }}</p>
       </div>
 
       <!-- Author Name(s) of a Relevant Report -->
@@ -66,14 +66,14 @@
           Author name(s) of a relevant report
         </h2>
         <hr class="border-t-2 border-gray-200 my-2" />
-        <p class="text-base text-gray-900">{{ motifData.authorNames }}</p>
+        <p class="text-base text-gray-900">{{ motifData.ra }}</p>
       </div>
 
       <!-- Title of the Report -->
       <div class="mb-6">
         <h2 class="text-lg font-bold text-gray-700">Title of the report</h2>
         <hr class="border-t-2 border-gray-200 my-2" />
-        <p class="text-base text-gray-900">{{ motifData.reportTitle }}</p>
+        <p class="text-base text-gray-900">{{ motifData.rt }}</p>
       </div>
 
       <!-- Bibliographic Information of the Report -->
@@ -82,7 +82,7 @@
           Bibliographic information of the report
         </h2>
         <hr class="border-t-2 border-gray-200 my-2" />
-        <p class="text-base text-gray-900">{{ motifData.bibliographicInfo }}</p>
+        <p class="text-base text-gray-900">{{ motifData.rl }}</p>
       </div>
 
       <!-- PubMed ID Numbers or GenBank Accession Number -->
@@ -91,21 +91,25 @@
           PubMed ID numbers or GenBank accession number
         </h2>
         <hr class="border-t-2 border-gray-200 my-2" />
-        <p class="text-base text-gray-900">{{ motifData.pubmedIdNumbers }}</p>
+        <p class="text-base text-gray-900">{{ motifData.id }}</p>
       </div>
 
       <!-- Motif Sequence -->
       <div class="mb-6">
         <h2 class="text-lg font-bold text-gray-700">Motif sequence</h2>
         <hr class="border-t-2 border-gray-200 my-2" />
-        <p class="text-base text-gray-900">{{ motifData.motifSequence }}</p>
+        <p class="text-base text-gray-900">{{ motifData.sq }}</p>
       </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, onBeforeMount } from "vue";
+import axios from "./../constants/Axios";
+import { useRouter } from "vue-router";
+
+const accessionNumber = useRouter().currentRoute.value.params.id;
 
 // Dummy data to simulate the response you provided
 const motifData = ref({
@@ -123,5 +127,12 @@ const motifData = ref({
     "Plant Physiol. 139: 88-100 (2005) Plant Physiol. 141:540-545 (2006)",
   pubmedIdNumbers: "PubMed: 16113211 PubMed: 16760496",
   motifSequence: "TGGGCY",
+});
+
+onBeforeMount(async () => {
+  const response = await axios.post("/guest/query-cre", {
+    ac: accessionNumber,
+  });
+  motifData.value = response.data.data[0];
 });
 </script>

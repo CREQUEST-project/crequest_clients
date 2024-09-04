@@ -42,7 +42,7 @@
             <td
               class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium"
             >
-              <button @click="viewHistory(index)" class="mx-2">
+              <button @click="viewHistory(history.id)" class="mx-2">
                 <span
                   class="material-symbols-outlined text-blue-600 hover:text-blue-900"
                 >
@@ -139,11 +139,9 @@ import { useRouter } from "vue-router";
 
 const router = useRouter();
 
-// Sample data
-
 onMounted(async () => {
   const user_id = localStorage.getItem("user_id");
-  const response = await axios.get(`user/${user_id}/search-for-care/histories`, {
+  const response = await axios.get(`user/${user_id}/search-for-cre/histories`, {
     headers: {
       Authorization: `Bearer ${localStorage.getItem("token")}`,
     },

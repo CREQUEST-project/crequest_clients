@@ -88,7 +88,7 @@
           </thead>
           <tbody v-if="activeTab === 'sequence'">
             <tr v-for="(motif, index) in motifs" :key="motif.factor_id">
-              <td class="px-4 py-2 border">{{ motif.factor_id }}</td>
+              <td class="px-4 py-2 border" @click="router.push(`/motif-details/${motif.factor_id}`)">{{ motif.factor_id }}</td>
               <td class="px-4 py-2 border">
                 <button
                   :style="{ backgroundColor: motif.color }"
@@ -132,6 +132,9 @@ import {
   SearchResultUser,
   Match,
 } from "./../models/SearchResult";
+import { useRouter } from "vue-router";
+
+const router = useRouter();
 
 const sequence = ref("");
 
