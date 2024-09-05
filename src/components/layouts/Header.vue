@@ -55,7 +55,7 @@
             HISTORY
           </a>
           <a
-            v-if="isLoggedIn"
+            v-if="isBiologist"
             href="/biologist"
             :class="isActive('/biologist')"
             @click="setActive('biologist')"
@@ -89,7 +89,7 @@
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
-import { isLoggedIn } from "./../../stores/authStore";
+import { isLoggedIn, isBiologist } from "./../../stores/authStore";
 
 const route = useRoute();
 const router = useRouter();
@@ -100,6 +100,11 @@ onMounted(() => {
   const token = localStorage.getItem("token");
   if (token) {
     isLoggedIn.value = true;
+    if (localStorage.getItem("user_role_id") === "3") {
+      isBiologist.value = true;
+    } else {
+      isBiologist.value = false;
+    }
   }
 });
 
@@ -121,7 +126,9 @@ function logout() {
   localStorage.removeItem("token");
   localStorage.removeItem("user_name");
   localStorage.removeItem("user_id");
+  localStorage.removeItem("user_role_id")
   isLoggedIn.value = false;
+  isBiologist.value = false;
   dropdownOpen.value = false;
   router.push("/login");
 }

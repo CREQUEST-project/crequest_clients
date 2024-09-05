@@ -68,7 +68,7 @@
 import { ref } from "vue";
 import axios from "./../constants/Axios";
 import { useRouter } from "vue-router";
-import { isLoggedIn } from "./../stores/authStore"; 
+import { isLoggedIn, isBiologist } from "./../stores/authStore"; 
 import { useToast } from "vue-toastification";
 
 const toast = useToast();
@@ -100,8 +100,14 @@ const Login = async () => {
     });
     localStorage.setItem('username', response2.data.user_name);
     localStorage.setItem('user_id', response2.data.id);
+    localStorage.setItem('user_role_id', response2.data.user_role_id);
 
     isLoggedIn.value = true;
+    if (localStorage.getItem('user_role_id') === '3') {
+      isBiologist.value = true;
+    } else {
+      isBiologist.value = false;
+    }
 
     toast.success('Login successful!');
     router.push('/');

@@ -3,9 +3,7 @@
     <div class="w-full max-w-6xl bg-white p-10 rounded-lg shadow-md">
       <h1 class="text-4xl font-bold text-gray-900 mb-8">Motif Sample</h1>
 
-      <!-- INPUT and OUTPUT sections -->
       <div class="grid grid-cols-2 gap-8 mb-8">
-        <!-- INPUT Section -->
         <div>
           <h2
             class="text-lg font-bold bg-custom-green text-white px-4 py-2 rounded-lg inline-block mb-4"
@@ -44,7 +42,6 @@
           </div>
         </div>
 
-        <!-- OUTPUT Section -->
         <div>
           <h2
             class="text-lg font-bold bg-custom-green text-white px-4 py-2 rounded-lg inline-block mb-4"
@@ -85,7 +82,6 @@
         </div>
       </div>
 
-      <!-- PARAMETERS Section -->
       <h2
         class="text-lg font-bold bg-custom-green text-white px-4 py-2 rounded-lg inline-block mb-4"
       >
@@ -220,7 +216,6 @@
         </div>
       </div>
 
-      <!-- Submit and Reset Buttons -->
       <div class="mt-8 flex space-x-4 justify-center">
         <button
           @click="handleSubmit"
@@ -243,7 +238,10 @@
 import { ref } from "vue";
 
 // Input fields
-const inputFiles = ref({ f: null, b: null });
+const inputFiles = ref<{ f: File | null; b: File | null }>({
+  f: null,
+  b: null,
+});
 const outputFile = ref("");
 const matrixFile = ref("");
 
@@ -258,7 +256,7 @@ const pspWeight = ref(100); // New parameter for -Q <value>
 const temporaryParameter = ref(1); // New parameter for -z <0|1>
 
 // Handle file input
-function handleFileChange(key: string, event: Event) {
+function handleFileChange(key: 'f' | 'b', event: Event) {
   const files = (event.target as HTMLInputElement).files;
   if (files && files.length > 0) {
     inputFiles.value[key] = files[0];
