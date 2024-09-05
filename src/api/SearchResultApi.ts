@@ -16,6 +16,7 @@ const getSearchResult = async (
       },
       { headers: headers }
     );
+    console.log("data", response.data);
     return response.data;
   } else {
     const response = await axios.post("/guest/search-for-cre", {

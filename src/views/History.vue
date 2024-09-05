@@ -136,8 +136,10 @@
 import { ref, computed, onMounted } from "vue";
 import axios from "./../constants/Axios";
 import { useRouter } from "vue-router";
+import { useToast } from "vue-toastification";
 
 const router = useRouter();
+const toast = useToast();
 
 onMounted(async () => {
   const user_id = localStorage.getItem("user_id");
@@ -148,11 +150,11 @@ onMounted(async () => {
   });
 
   historyData.value = response.data.data;
+  historyData.value = historyData.value.reverse();
 });
 
 const historyData = ref([]);
 
-// Pagination state
 const rowsPerPage = ref(5);
 const currentPage = ref(1);
 
@@ -176,10 +178,23 @@ const changePage = (page: number) => {
   }
 };
 
-const deleteHistory = (index: number) => {
-  historyData.value.splice(startIndex.value + index, 1);
-  if (currentPage.value > totalPages.value) {
-    currentPage.value = totalPages.value;
+const deleteHistory = async (index: number) => {
+  const user_id = localStorage.getItem("user_id");
+  const history_id = historyData.value[startIndex.value + index].id;
+  const response = await axios.delete(
+    `user/${user_id}/search-for-cre/histories/${history_id}`,
+    {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+    }
+  );
+  if (response.status === 200) {
+    historyData.value.splice(startIndex.value + index, 1);
+    if (currentPage.value > totalPages.value) {
+      currentPage.value = totalPages.value;
+    }
+    toast.success("History deleted successfully");
   }
 };
 
@@ -188,7 +203,3 @@ const viewHistory = (index: number) => {
   console.log(historyData.value[startIndex.value + index]);
 };
 </script>
-
-<style>
-/* Optional custom styles for buttons or pagination */
-</style>

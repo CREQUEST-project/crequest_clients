@@ -99,7 +99,7 @@
                 </button>
               </td>
               <td class="px-4 py-2 border">{{ motif.de }}</td>
-              <td class="px-4 py-2 border">{{ motif.function_label }}</td>
+              <td class="px-4 py-2 border">{{ motif.function_label?.label }}</td>
             </tr>
           </tbody>
           <tbody v-else>
@@ -131,6 +131,7 @@ import {
   SearchResultGuest,
   SearchResultUser,
   Match,
+  Function
 } from "./../models/SearchResult";
 import { useRouter } from "vue-router";
 
