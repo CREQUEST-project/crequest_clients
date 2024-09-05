@@ -3,8 +3,37 @@ import { ref } from "vue";
 import Datepicker from "vue3-datepicker";
 import axios from "./../constants/Axios";
 
+interface BodyType {
+  id?: string;
+  de?: string;
+  kw?: string;
+  os?: string;
+  ra?: string;
+  rt?: string;
+  rl?: string;
+  ac?: string;
+  dt?: string;
+}
+
+interface ResponseQueryCre {
+  ac: string;
+  dt: string;
+  de: string;
+  kw: string;
+  os: string;
+  ra: string;
+  rt: string;
+  rl: string;
+  rc: string;
+  rd: string;
+  sq: string;
+  note: string;
+  color: string;
+  id: string;
+}
+
 const showResult = ref(false);
-const result = ref([]);
+const result = ref<ResponseQueryCre[]>([]);
 const uniqueIdentifier = ref("");
 const briefDescription = ref("");
 const keywords = ref("");
@@ -20,7 +49,7 @@ const count = ref(0);
 const handleSubmit = async () => {
   try {
     const user_id = localStorage.getItem("user_id");
-    const body = {};
+    const body: BodyType = {};
     if (uniqueIdentifier.value) body.id = uniqueIdentifier.value;
     if (briefDescription.value) body.de = briefDescription.value;
     if (keywords.value) body.kw = keywords.value;
@@ -216,7 +245,9 @@ function handleReset() {
       </form>
 
       <div v-if="showResult">
-        <h2 class="text-2xl font-bold text-gray-900 mt-8">Results ({{ count }})</h2>
+        <h2 class="text-2xl font-bold text-gray-900 mt-8">
+          Results ({{ count }})
+        </h2>
         <div class="mt-4">
           <div
             v-for="item in result"

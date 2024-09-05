@@ -141,6 +141,12 @@ import { useToast } from "vue-toastification";
 const router = useRouter();
 const toast = useToast();
 
+interface History {
+  id: number;
+  sequences: string;
+  created_at: string;
+}
+
 onMounted(async () => {
   const user_id = localStorage.getItem("user_id");
   const response = await axios.get(`user/${user_id}/search-for-cre/histories`, {
@@ -153,7 +159,7 @@ onMounted(async () => {
   historyData.value = historyData.value.reverse();
 });
 
-const historyData = ref([]);
+const historyData = ref<History[]>([]);
 
 const rowsPerPage = ref(5);
 const currentPage = ref(1);

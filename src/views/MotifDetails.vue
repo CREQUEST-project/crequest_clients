@@ -9,14 +9,14 @@
       <div class="mb-6">
         <h2 class="text-lg font-bold text-gray-700">Function label</h2>
         <hr class="border-t-2 border-gray-200 my-2" />
-        <p class="text-base text-gray-900">{{ motifData.functionLabel }}</p>
+        <p class="text-base text-gray-900">{{ motifData.function_label }}</p>
       </div>
 
       <!-- Function Details -->
       <div class="mb-6">
         <h2 class="text-lg font-bold text-gray-700">Function details</h2>
         <hr class="border-t-2 border-gray-200 my-2" />
-        <p class="text-base text-gray-900">{{ motifData.functionDetails }}</p>
+        <p class="text-base text-gray-900">{{ motifData.function_details }}</p>
       </div>
 
       <!-- Unique Accession Number -->
@@ -109,24 +109,33 @@ import { ref, onBeforeMount } from "vue";
 import axios from "./../constants/Axios";
 import { useRouter } from "vue-router";
 
+interface MotifData {
+  ac: string;
+  dt: string;
+  de: string;
+  kw: string;
+  os: string;
+  ra: string;
+  rl: string;
+  rt: string;
+  id: string;
+  sq: string;
+  function_label?: string;
+  function_details?: string;
+}
 const accessionNumber = useRouter().currentRoute.value.params.id;
 
-// Dummy data to simulate the response you provided
-const motifData = ref({
-  uniqueAccessionNumber: "S000474",
-  functionLabel: "None",
-  functionDetails: "",
-  dateOfUpdate: "01-August-2006 (last modified) kehi",
-  briefDescription: `"Site II element" found in the promoter regions of cytochromegenes (Cytc-1, Cytc-2) in Arabidopsis; Located between -147 and-156 from the translational starts sites (Welchen et al., 2005);Y=C/T; See also S000308; Overrepresented in the promoters ofnuclear genes encoding components of the oxidativephosphorylation (OxPhos) machinery from both Arabidopsis and rice(Welchen and Gonzalez, 2006);`,
-  keywords: "cytochrome; TCP-domain; meristem; oxidative phosphorylation;",
-  commonName: "Arabidopsis thaliana; Oryza sativa (rice);",
-  authorNames: "Welchen E, Gonzalez DH. Welchen E, Gonzalez DH.",
-  reportTitle:
-    "Differential expression of the Arabidopsis cytochrome c genesCytc-1 and Cytc-2. Evidence for the involvement of TCP-domainprotein-binding elements in anther- and meristem-specificexpression of the Cytc-1 gene.Overrepresentation of Elements Recognized by TCP-DomainTranscription Factors in the Upstream Regions of Nuclear GenesEncoding Components of the Mitochondrial OxidativePhosphorylation Machinery.",
-  bibliographicInfo:
-    "Plant Physiol. 139: 88-100 (2005) Plant Physiol. 141:540-545 (2006)",
-  pubmedIdNumbers: "PubMed: 16113211 PubMed: 16760496",
-  motifSequence: "TGGGCY",
+const motifData = ref<MotifData>({
+  ac: "",
+  dt: "",
+  de: "",
+  kw: "",
+  os: "",
+  ra: "",
+  rl: "",
+  rt: "",
+  id: "",
+  sq: "",
 });
 
 onBeforeMount(async () => {

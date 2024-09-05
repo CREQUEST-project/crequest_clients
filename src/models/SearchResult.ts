@@ -12,6 +12,7 @@ export interface Match {
     start: number;
     end: number;
     color: string;
+    active?: boolean;
 }
 
 export interface SearchResultGuest {

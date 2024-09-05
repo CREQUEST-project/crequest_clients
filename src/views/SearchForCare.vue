@@ -130,8 +130,7 @@ import getSearchResult from "./../api/SearchResultApi";
 import {
   SearchResultGuest,
   SearchResultUser,
-  Match,
-  Function
+  Match
 } from "./../models/SearchResult";
 import { useRouter } from "vue-router";
 

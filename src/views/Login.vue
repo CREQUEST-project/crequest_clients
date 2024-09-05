@@ -65,7 +65,6 @@
 </template>
 
 <script setup lang="ts">
-// Không cần thêm logic bổ sung cho form này ở cấp độ cơ bản.
 import { ref } from "vue";
 import axios from "./../constants/Axios";
 import { useRouter } from "vue-router";
@@ -107,8 +106,8 @@ const Login = async () => {
     toast.success('Login successful!');
     router.push('/');
   } catch (error) {
-    console.error('Login failed:', error.response ? error.response.data : error.message);
-    toast.failed('Login failed. Please check your credentials and try again.');
+    console.error('Login failed:', error);
+    toast.error('Login failed. Please check your credentials and try again.');
   } finally {
     loading.value = false;
   }
