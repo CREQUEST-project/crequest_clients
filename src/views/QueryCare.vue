@@ -13,6 +13,8 @@ interface BodyType {
   rl?: string;
   ac?: string;
   dt?: string;
+  sq?: string;
+  rd?: string;
 }
 
 interface ResponseQueryCre {
@@ -43,6 +45,8 @@ const reportTitle = ref("");
 const bibliographicInfo = ref("");
 const accessionNumber = ref("");
 const updateDate = ref();
+const sequence = ref("");
+const uniqueAccessionNumber = ref("");
 
 const count = ref(0);
 
@@ -52,12 +56,14 @@ const handleSubmit = async () => {
     const body: BodyType = {};
     if (uniqueIdentifier.value) body.id = uniqueIdentifier.value;
     if (briefDescription.value) body.de = briefDescription.value;
+    if (uniqueAccessionNumber.value) body.ac = uniqueAccessionNumber.value;
+    if (sequence.value) body.sq = sequence.value;
     if (keywords.value) body.kw = keywords.value;
     if (plantName.value) body.os = plantName.value;
     if (authorName.value) body.ra = authorName.value;
     if (reportTitle.value) body.rt = reportTitle.value;
     if (bibliographicInfo.value) body.rl = bibliographicInfo.value;
-    if (accessionNumber.value) body.ac = accessionNumber.value;
+    if (accessionNumber.value) body.rd = accessionNumber.value;
     if (updateDate.value) body.dt = updateDate.value;
 
     if (!user_id) {
@@ -140,6 +146,30 @@ function handleReset() {
             type="text"
             placeholder="Brief description of the motif"
             v-model="briefDescription"
+            class="border border-gray-300 rounded-lg p-3 mt-2 outline-none focus:border-custom-green"
+          />
+        </div>
+
+        <div class="flex flex-col">
+          <label class="text-lg font-semibold text-gray-700" for="keywords"
+            >Sequence:*</label
+          >
+          <input
+            type="text"
+            placeholder="Sequence"
+            v-model="sequence"
+            class="border border-gray-300 rounded-lg p-3 mt-2 outline-none focus:border-custom-green"
+          />
+        </div>
+
+        <div class="flex flex-col">
+          <label class="text-lg font-semibold text-gray-700" for="keywords"
+            >Unique accession number:*</label
+          >
+          <input
+            type="text"
+            placeholder="uniqueAccessionNumber"
+            v-model="uniqueAccessionNumber"
             class="border border-gray-300 rounded-lg p-3 mt-2 outline-none focus:border-custom-green"
           />
         </div>

@@ -12,7 +12,7 @@
       </p>
       <button
         class="bg-custom-green text-white text-lg font-bold py-3 px-8 rounded-full hover:bg-green-800 transition duration-300"
-        @click="router.push('/search-for-care')"
+        @click="router.push('/search-for-cre')"
       >
         START SEARCHING
       </button>
