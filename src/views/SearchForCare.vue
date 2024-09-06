@@ -24,6 +24,7 @@
           Submit
         </button>
         <button
+          @click="sequence = ''"
           class="bg-green-600 text-white py-3 px-10 rounded-lg text-2xl hover:bg-green-700"
         >
           Reset
@@ -176,7 +177,7 @@
       class="bg-white p-6 rounded-lg shadow-lg w-1/3 max-h-[80vh] overflow-y-auto"
     >
       <h2 class="text-2xl font-bold mb-4">Enter emails</h2>
-      <div class="mb-4 max-h-[300px] overflow-y-auto">
+      <div class="mb-4 max-h-[350px] overflow-y-auto">
         <div v-for="(_email, index) in emails" :key="index" class="mb-4">
           <input
             v-model="emails[index]"
@@ -196,24 +197,24 @@
         <button @click="addEmail" class="text-blue-500 text-sm mb-4">
           + Add another email
         </button>
-
-        <div class="flex justify-end space-x-4">
-          <button
-            @click="showModal = false"
-            class="bg-gray-300 text-black py-2 px-4 rounded-lg hover:bg-gray-400"
-          >
-            Cancel
-          </button>
-          <button
-            @click="submitEmails"
-            class="bg-green-600 text-white py-2 px-4 rounded-lg hover:bg-green-700"
-          >
-            Submit
-          </button>
-        </div>
+      </div>
+      <div class="flex justify-end space-x-4">
+        <button
+          @click="showModal = false"
+          class="bg-gray-300 text-black py-2 px-4 rounded-lg hover:bg-gray-400"
+        >
+          Cancel
+        </button>
+        <button
+          @click="submitEmails"
+          class="bg-green-600 text-white py-2 px-4 rounded-lg hover:bg-green-700"
+        >
+          Submit
+        </button>
       </div>
     </div>
   </div>
+  <Loading v-if="isLoading" :isLoading="isLoading" />
 </template>
 
 <script setup lang="ts">
@@ -228,6 +229,7 @@ import { useRouter } from "vue-router";
 import { isLoggedIn } from "./../stores/authStore";
 import axios from "./../constants/Axios";
 import { useToast } from "vue-toastification";
+import Loading from "./../components/layouts/Loading.vue";
 
 const router = useRouter();
 
@@ -235,6 +237,7 @@ const sequence = ref("");
 
 const showResult = ref(false);
 const toast = useToast();
+const isLoading = ref(false);
 
 const result = ref<SearchResultGuest | SearchResultUser>();
 
@@ -303,12 +306,12 @@ const exportCsv = async () => {
 };
 
 const addEmail = () => {
-  emails.value.push(""); // Thêm một trường email trống
+  emails.value.push("");
 };
 
 const removeEmail = (index: number) => {
   if (emails.value.length > 1) {
-    emails.value.splice(index, 1); // Xóa email khỏi mảng
+    emails.value.splice(index, 1);
   }
 };
 
@@ -317,6 +320,8 @@ const submitEmails = async () => {
     toast.error("Please enter all emails");
     return;
   }
+
+  isLoading.value = true;
 
   try {
     let response;
@@ -339,13 +344,13 @@ const submitEmails = async () => {
       );
     } else {
       response = await axios.post("/guest/cre/export-excel/send-email", {
-        emails: emails.value,
+        receiver_email: emails.value,
         sequence:
           activeTab.value === "sequence"
             ? sequence.value
             : reverseSequenceChars.value.join(""),
       });
-    }
+    } 
 
     if (response.status === 200)
       toast.success(
@@ -354,6 +359,8 @@ const submitEmails = async () => {
     showModal.value = false;
   } catch (error) {
     console.error("Failed to send emails:", error);
+  } finally {
+    isLoading.value = false;
   }
 };
 

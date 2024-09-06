@@ -230,12 +230,22 @@
           Reset
         </button>
       </div>
+      <div v-if="showResult" class="flex flex-col mx-auto justify-center items-center mt-4">
+        <h2 class="text-3xl font-bold text-gray-900 mb-8 w-full text-left">Result</h2>
+        <div v-for="(item, index) in result" :key="index">
+          <p>{{ item }}</p>
+        </div>
+      </div>
     </div>
+    <Loading :isLoading="isLoading" />
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, computed } from "vue";
+import axios from "./../constants/Axios";
+import { isLoggedIn } from "./../stores/authStore";
+import Loading from "./../components/layouts/Loading.vue";
 
 // Input fields
 const inputFiles = ref<{ f: File | null; b: File | null }>({
@@ -254,28 +264,65 @@ const maxInstances = ref(2);
 const pspWeight = ref(100);
 const temporaryParameter = ref(1);
 
-function handleFileChange(key: 'f' | 'b', event: Event) {
+const isLoading = ref(false);
+
+const result = ref([]);
+const showResult = computed(() => result.value.length > 0);
+
+function handleFileChange(key: "f" | "b", event: Event) {
   const files = (event.target as HTMLInputElement).files;
   if (files && files.length > 0) {
     inputFiles.value[key] = files[0];
   }
 }
 
-function handleSubmit() {
-  console.log({
-    inputFiles: inputFiles.value,
-    outputFile: outputFile.value,
-    matrixFile: matrixFile.value,
-    repeatCount: repeatCount.value,
-    motifLength: motifLength.value,
-    overlapValue: overlapValue.value,
-    strandOption: strandOption.value,
-    motifCount: motifCount.value,
-    maxInstances: maxInstances.value,
-    pspWeight: pspWeight.value,
-    temporaryParameter: temporaryParameter.value,
-  });
-}
+const handleSubmit = async () => {
+  isLoading.value = true;
+  const formData = new FormData();
+  formData.append("f_file", inputFiles.value.f as File);
+  formData.append("b_file", inputFiles.value.b as File);
+  formData.append("output_o", outputFile.value);
+  formData.append("output_m", matrixFile.value);
+  formData.append("r", repeatCount.value.toString());
+  formData.append("w", motifLength.value.toString());
+  formData.append("x", overlapValue.value.toString());
+  formData.append("s", strandOption.value.toString());
+  formData.append("n", motifCount.value.toString());
+  formData.append("M", maxInstances.value.toString());
+  formData.append("Q", pspWeight.value.toString());
+  formData.append("z", temporaryParameter.value.toString());
+
+  if (isLoggedIn.value) {
+    try {
+      const response = await axios.post("/user/motif-sampler", formData, {
+        headers: {
+          Bearer: localStorage.getItem("token"),
+          "Content-Type": "multipart/form-data",
+        },
+      });
+      result.value = response.data.results;
+      console.log("Motif Sampler response:", response.data);
+    } catch (error) {
+      console.error("Motif Sampler error:", error);
+    } finally {
+      isLoading.value = false;
+    }
+  } else {
+    try {
+      const response = await axios.post("/guest/motif-sampler", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+      result.value = response.data.results;
+      console.log("Motif Sampler response:", response.data);
+    } catch (error) {
+      console.error("Motif Sampler error:", error);
+    } finally {
+      isLoading.value = false;
+    }
+  }
+};
 
 function handleReset() {
   inputFiles.value = { f: null, b: null };
