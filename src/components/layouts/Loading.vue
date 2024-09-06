@@ -30,7 +30,7 @@
 </template>
 
 <script setup lang="ts">
-const props = defineProps({
+defineProps({
   isLoading: {
     type: Boolean,
     required: true,

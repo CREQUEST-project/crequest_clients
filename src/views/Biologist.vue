@@ -1,61 +1,39 @@
 <template>
-  <div class="flex h-screen">
-    <!-- Sidebar Left - Motif List -->
-    <div class="w-1/4 bg-gray-100 p-4 border-r">
-      <!-- Search Bar -->
-      <div class="mb-4">
-        <input
-          type="text"
-          v-model="searchTerm"
-          placeholder="Enter motif"
-          class="w-full p-2 border rounded-md"
-        />
-      </div>
-
-      <!-- Motif List -->
-      <ul>
-        <li
-          v-for="(motif, index) in filteredMotifs"
-          :key="index"
-          @click="selectMotif(motif)"
-          class="cursor-pointer p-2 mb-2 border rounded-lg flex justify-between items-center"
-          :class="{
-            'bg-green-100': selectedMotif === motif,
-            'hover:bg-gray-200': selectedMotif !== motif
-          }"
-        >
-          <span>{{ motif.sq }}</span>
-          <button @click.stop="removeMotif(motif)">
-            <i class="text-red-600 fa fa-trash"></i>
-          </button>
-        </li>
-      </ul>
-    </div>
+  <div class="flex">
+    <SideBarBiologist
+      :searchTerm="searchTerm"
+      :listMotifs="listMotifs"
+      :selectedMotif="selectedMotif"
+      @selectMotif="selectMotif"
+      @removeMotif="removeMotif"
+    />
 
     <!-- Main Content - Form for Editing Motif -->
     <div class="w-3/4 p-8">
       <h1 class="text-2xl font-bold mb-4">Biologist</h1>
 
       <!-- Check if a motif is selected -->
-      <div v-if="selectedMotif">
+      <div v-if="selectedMotifToValidate">
         <form @submit.prevent="submitForm">
           <!-- Form Fields for Motif Information -->
           <div class="grid grid-cols-2 gap-4 mb-4">
             <div>
-              <label for="sq" class="block">SQ</label>
+              <label for="sq" class="block">Sequence</label>
               <input
                 type="text"
                 id="sq"
-                v-model="selectedMotif.sq"
+                v-model="selectedMotifToValidate.sq"
                 class="w-full p-2 border rounded-md"
               />
             </div>
             <div>
-              <label for="ac" class="block">AC</label>
+              <label for="ac" class="block"
+                >Accession number*</label
+              >
               <input
                 type="text"
                 id="ac"
-                v-model="selectedMotif.ac"
+                v-model="selectedMotifToValidate.ac"
                 class="w-full p-2 border rounded-md"
               />
             </div>
@@ -63,66 +41,97 @@
 
           <!-- Other fields -->
           <div class="mb-4">
-            <label for="dt" class="block">DT</label>
+            <label for="dt" class="block">Date of update:*</label>
             <input
               type="text"
               id="dt"
-              v-model="selectedMotif.dt"
+              v-model="selectedMotifToValidate.dt"
               class="w-full p-2 border rounded-md"
             />
           </div>
           <div class="mb-4">
-            <label for="de" class="block">DE</label>
+            <label for="de" class="block"
+              >Brief description of the motif*</label
+            >
             <textarea
               id="de"
-              v-model="selectedMotif.de"
+              v-model="selectedMotifToValidate.de"
               class="w-full p-2 border rounded-md"
             ></textarea>
           </div>
           <div class="mb-4">
-            <label for="kw" class="block">KW</label>
+            <label for="kw" class="block">Keywords:*</label>
             <textarea
               id="kw"
-              v-model="selectedMotif.kw"
+              v-model="selectedMotifToValidate.kw"
               class="w-full p-2 border rounded-md"
             ></textarea>
           </div>
           <div class="mb-4">
-            <label for="os" class="block">OS</label>
+            <label for="os" class="block"
+              >Common name and/or scientific name of plant species*</label
+            >
             <textarea
               id="os"
-              v-model="selectedMotif.os"
+              v-model="selectedMotifToValidate.os"
               class="w-full p-2 border rounded-md"
             ></textarea>
           </div>
           <div class="mb-4">
-            <label for="ra" class="block">RA</label>
+            <label for="ra" class="block"
+              >Author name(s) of a relevant report*</label
+            >
             <textarea
               id="ra"
-              v-model="selectedMotif.ra"
+              v-model="selectedMotifToValidate.ra"
               class="w-full p-2 border rounded-md"
             ></textarea>
           </div>
           <div class="mb-4">
-            <label for="rt" class="block">RT</label>
+            <label for="rt" class="block">Title of the report*</label>
             <textarea
               id="rt"
-              v-model="selectedMotif.rt"
+              v-model="selectedMotifToValidate.rt"
               class="w-full p-2 border rounded-md"
             ></textarea>
           </div>
           <div class="mb-4">
-            <label for="rl" class="block">RL</label>
+            <label for="rl" class="block"
+              >Bibliographic information of the report*</label
+            >
             <textarea
               id="rl"
-              v-model="selectedMotif.rl"
+              v-model="selectedMotifToValidate.rl"
+              class="w-full p-2 border rounded-md"
+            ></textarea>
+          </div>
+          <div class="mb-4">
+            <label for="rl" class="block"
+              >RC</label
+            >
+            <textarea
+              id="rl"
+              v-model="selectedMotifToValidate.rc"
+              class="w-full p-2 border rounded-md"
+            ></textarea>
+          </div>
+          <div class="mb-4">
+            <label for="rl" class="block"
+              >PubMed ID numbers or GenBank accession number*</label
+            >
+            <textarea
+              id="rl"
+              v-model="selectedMotifToValidate.rd"
               class="w-full p-2 border rounded-md"
             ></textarea>
           </div>
 
           <!-- Submit and Reset Buttons -->
           <div class="flex space-x-4">
-            <button type="submit" class="px-4 py-2 bg-green-600 text-white rounded-md">
+            <button
+              type="submit"
+              class="px-4 py-2 bg-green-600 text-white rounded-md"
+            >
               Submit
             </button>
             <button
@@ -149,10 +158,30 @@
       </div>
     </div>
   </div>
+  <Loading :isLoading="isLoading" />
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue';
+import { ref, onMounted } from "vue";
+import axios from "../constants/Axios";
+import { MotifName } from "../models/Biologist";
+import SideBarBiologist from "../components/SideBarBiologist.vue";
+import { useToast } from "vue-toastification";
+import Loading from "../components/layouts/Loading.vue";
+
+const listMotifs = ref<MotifName[]>([]);
+const toast = useToast();
+const isLoading = ref(false);
+
+onMounted(async () => {
+  const token = localStorage.getItem("token");
+  const response = await axios.get("/biologist/computational-motifs", {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  listMotifs.value = response.data.data;
+});
 
 interface Motif {
   sq: string;
@@ -164,43 +193,89 @@ interface Motif {
   ra: string;
   rt: string;
   rl: string;
+  rc: string;
+  rd: string;
 }
 
-const searchTerm = ref('');
-const motifs = ref<Motif[]>([
-  { sq: 'GTAnGAww', ac: '', dt: '', de: '', kw: '', os: '', ra: '', rt: '', rl: '' },
-  { sq: 'GTAnGAAn', ac: '', dt: '', de: '', kw: '', os: '', ra: '', rt: '', rl: '' },
-  { sq: 'CAkGGAkw', ac: '', dt: '', de: '', kw: '', os: '', ra: '', rt: '', rl: '' },
-  { sq: 'nnTynGTA', ac: '', dt: '', de: '', kw: '', os: '', ra: '', rt: '', rl: '' },
-  { sq: 'AAnTATnA', ac: '', dt: '', de: '', kw: '', os: '', ra: '', rt: '', rl: '' },
-  { sq: 'ACTATAmr', ac: '', dt: '', de: '', kw: '', os: '', ra: '', rt: '', rl: '' },
-  // Thêm các motif khác ở đây...
-]);
+const searchTerm = ref("");
+const selectedMotifToValidate = ref<Motif | null>(null);
 
-const selectedMotif = ref<Motif | null>(null);
+const selectedMotif = ref<MotifName | null>(null);
 
-const filteredMotifs = computed(() =>
-  motifs.value.filter((motif) =>
-    motif.sq.toLowerCase().includes(searchTerm.value.toLowerCase())
-  )
-);
+const selectMotif = (motif: MotifName) => {
+  selectedMotif.value = motif; // Sao chép motif để chỉnh sửa
+  selectedMotifToValidate.value = {
+    sq: motif.sequences,
+    ac: "",
+    dt: "",
+    de: "",
+    kw: "",
+    os: "",
+    ra: "",
+    rt: "",
+    rl: "",
+    rc: "",
+    rd: "",
+  };
+};
 
-function selectMotif(motif: Motif) {
-  selectedMotif.value = { ...motif }; // Sao chép motif để chỉnh sửa
-}
-
-function removeMotif(motif: Motif) {
-  motifs.value = motifs.value.filter((m) => m !== motif);
-  if (selectedMotif.value === motif) {
-    selectedMotif.value = null;
+const removeMotif = async (motif: MotifName) => {
+  isLoading.value = true;
+  try {
+    const response = await axios.delete(
+      `/biologist/computational-motifs/${motif.id}`,
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      }
+    );
+    if (response.status === 200) {
+      const token = localStorage.getItem("token");
+      const response = await axios.get("/biologist/computational-motifs", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      toast.success("Motif deleted successfully");
+      listMotifs.value = response.data.data;
+      selectedMotif.value = null;
+      selectedMotifToValidate.value = null;
+    }
+  } catch (error) {
+    toast.error("Failed to delete motif");
+  } finally {
+    isLoading.value = false;
   }
-}
+};
 
-function submitForm() {
-  alert('Motif submitted: ' + JSON.stringify(selectedMotif.value));
-}
+const submitForm = async () => {
+  if (!selectedMotif.value) return;
+  const response = await axios.post(
+    `/biologist/computational-motifs/${selectedMotif.value?.id}/validation`,
+    selectedMotifToValidate.value,
+    {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+    }
+  );
+  if (response.status === 200) {
+    const token = localStorage.getItem("token");
+    const response = await axios.get("/biologist/computational-motifs", {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    listMotifs.value = response.data.data;
+    toast.success("Motif validated successfully");
+    selectedMotif.value = null;
+    selectedMotifToValidate.value = null;
+  }
+};
 
-function resetForm() {
+const resetForm = () => {
   selectedMotif.value = null;
-}
+  selectedMotifToValidate.value = null;
+};
 </script>
