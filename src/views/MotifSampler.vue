@@ -294,9 +294,10 @@ const handleSubmit = async () => {
 
   if (isLoggedIn.value) {
     try {
+      const token = localStorage.getItem("token");
       const response = await axios.post("/user/motif-sampler", formData, {
         headers: {
-          Bearer: localStorage.getItem("token"),
+          Authorization: `Bearer ${token}`,
           "Content-Type": "multipart/form-data",
         },
       });

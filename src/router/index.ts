@@ -68,6 +68,11 @@ const routes = [
     component: () => import("./../views/Biologist.vue"),
     meta: { requiresAuth: true, requiresBiologist: true },
   },
+  {
+    path: "/help",
+    name: "Help",
+    component: () => import("./../views/Help.vue"),
+  }
 ];
 
 const router = createRouter({

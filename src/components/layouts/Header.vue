@@ -13,6 +13,22 @@
       <div class="flex items-center space-x-8 text-lg">
         <nav class="flex items-center space-x-8">
           <a
+            href="/about"
+            :class="isActive('/about')"
+            @click="setActive('/about')"
+            class="hover:text-gray-300"
+          >
+            ABOUT
+          </a>
+          <a
+            href="/help"
+            :class="isActive('/help')"
+            @click="setActive('/help')"
+            class="hover:text-gray-300"
+          >
+            HELP
+          </a>
+          <a
             href="/query-cre"
             :class="isActive('/query-cre')"
             @click="setActive('query-cre')"
@@ -76,7 +92,9 @@
             class="absolute top-10 right-0 mt-2 w-48 bg-white text-black rounded-lg shadow-lg z-50"
           >
             <a href="#" class="block px-4 py-2 hover:bg-gray-200">PROFILE</a>
-            <a @click="logout" class="block px-4 py-2 hover:bg-gray-200 text-red-500"
+            <a
+              @click="logout"
+              class="block px-4 py-2 hover:bg-gray-200 text-red-500"
               >LOG OUT</a
             >
           </div>
@@ -126,7 +144,7 @@ function logout() {
   localStorage.removeItem("token");
   localStorage.removeItem("user_name");
   localStorage.removeItem("user_id");
-  localStorage.removeItem("user_role_id")
+  localStorage.removeItem("user_role_id");
   isLoggedIn.value = false;
   isBiologist.value = false;
   dropdownOpen.value = false;
