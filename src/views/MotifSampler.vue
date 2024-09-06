@@ -6,7 +6,7 @@
       <div class="grid grid-cols-2 gap-8 mb-8">
         <div>
           <h2
-            class="text-lg font-bold bg-custom-green text-white px-4 py-2 rounded-lg inline-block mb-4"
+            class="text-lg font-bold bg-custom-green-1 text-white px-4 py-2 rounded-lg inline-block mb-4"
           >
             INPUT
           </h2>
@@ -44,7 +44,7 @@
 
         <div>
           <h2
-            class="text-lg font-bold bg-custom-green text-white px-4 py-2 rounded-lg inline-block mb-4"
+            class="text-lg font-bold bg-custom-green-1 text-white px-4 py-2 rounded-lg inline-block mb-4"
           >
             OUTPUT
           </h2>
@@ -83,7 +83,7 @@
       </div>
 
       <h2
-        class="text-lg font-bold bg-custom-green text-white px-4 py-2 rounded-lg inline-block mb-4"
+        class="text-lg font-bold bg-custom-green-1 text-white px-4 py-2 rounded-lg inline-block mb-4"
       >
         PARAMETERS
       </h2>
@@ -219,7 +219,7 @@
       <div class="mt-8 flex space-x-4 justify-center">
         <button
           @click="handleSubmit"
-          class="bg-custom-green text-white py-2 px-8 rounded-lg hover:bg-green-700 font-semibold"
+          class="bg-custom-green-1 text-white py-2 px-8 rounded-lg hover:bg-green-700 font-semibold"
         >
           Submit
         </button>
@@ -245,17 +245,15 @@ const inputFiles = ref<{ f: File | null; b: File | null }>({
 const outputFile = ref("");
 const matrixFile = ref("");
 
-// Parameters
 const repeatCount = ref(100);
 const motifLength = ref(8);
 const overlapValue = ref(1);
 const strandOption = ref(0);
 const motifCount = ref(1);
 const maxInstances = ref(2);
-const pspWeight = ref(100); // New parameter for -Q <value>
-const temporaryParameter = ref(1); // New parameter for -z <0|1>
+const pspWeight = ref(100);
+const temporaryParameter = ref(1);
 
-// Handle file input
 function handleFileChange(key: 'f' | 'b', event: Event) {
   const files = (event.target as HTMLInputElement).files;
   if (files && files.length > 0) {
@@ -263,7 +261,6 @@ function handleFileChange(key: 'f' | 'b', event: Event) {
   }
 }
 
-// Handle form submission
 function handleSubmit() {
   console.log({
     inputFiles: inputFiles.value,
@@ -275,12 +272,11 @@ function handleSubmit() {
     strandOption: strandOption.value,
     motifCount: motifCount.value,
     maxInstances: maxInstances.value,
-    pspWeight: pspWeight.value, // Log new parameter
-    temporaryParameter: temporaryParameter.value, // Log new parameter
+    pspWeight: pspWeight.value,
+    temporaryParameter: temporaryParameter.value,
   });
 }
 
-// Handle form reset
 function handleReset() {
   inputFiles.value = { f: null, b: null };
   outputFile.value = "";
@@ -297,8 +293,7 @@ function handleReset() {
 </script>
 
 <style>
-/* Custom Green Color */
-.bg-custom-green {
+.bg-custom-green-1 {
   background-color: #004d00;
 }
 </style>
