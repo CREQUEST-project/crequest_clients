@@ -150,8 +150,12 @@ const goBack = () => {
 const getBackgroundColor = (index: number) => {
   let bgColor = "";
   motifs.value.forEach((motif) => {
-    if (motif.active && index >= motif.start && index < motif.end) {
-      bgColor = motif.color;
+    if (motif.active) {
+      motif.positions.forEach((position) => {
+        if (index >= position.start && index < position.end) {
+          bgColor = motif.color;
+        }
+      });
     }
   });
   return bgColor;
@@ -160,8 +164,12 @@ const getBackgroundColor = (index: number) => {
 const getBackgroundColorReverse = (index: number) => {
   let bgColor = "";
   reverseMatches.value.forEach((motif) => {
-    if (motif.active && index >= motif.start && index < motif.end) {
-      bgColor = motif.color;
+    if (motif.active) {
+      motif.positions.forEach((position) => {
+        if (index >= position.start && index < position.end) {
+          bgColor = motif.color;
+        }
+      });
     }
   });
   return bgColor;

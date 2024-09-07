@@ -4,13 +4,17 @@ interface Function {
     id: string;
 }
 
+interface Position {
+    start: number;
+    end: number;
+}
+
 export interface Match {
     factor_id: string;
     sq: string;
     de: string;
     function_label?: Function;
-    start: number;
-    end: number;
+    positions: Position[];
     color: string;
     active?: boolean;
 }
