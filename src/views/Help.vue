@@ -1,8 +1,8 @@
 <template>
   <h1 class="text-4xl font-bold mb-4 p-10">How to use</h1>
-  <div class="flex h-screen p-10">
+  <div class="flex p-10">
     <!-- Sidebar -->
-    <ul class="w-1/12 space-y-4">
+    <ul class="w-1/12 space-y-4 fixed top-1/2 transform -translate-y-1/2">
       <li>
         <button
           @click="selectedOption = 'queryCare'"
@@ -40,13 +40,14 @@
         </button>
       </li>
     </ul>
+    <div class="w-1/12"></div>
 
     <!-- Main Content -->
-    <div class="w-4/5 p-8">
+    <div class="w-5/6 px-8">
       <!-- Query Care Content -->
       <div v-if="selectedOption === 'queryCare'">
         <h1 class="text-2xl font-bold">Query Care</h1>
-        <div class="bg-green-600 text-white p-6 rounded-md mb-6">
+        <div class="bg-green-600 text-white p-6 rounded-md my-6">
           <p>
             This function allows all users to access the system and perform
             searches for Cis-regulatory elements (CREs) based on various
@@ -57,12 +58,92 @@
             accurate information.
           </p>
         </div>
+        <p class="my-2">
+          <b>Actors</b>: Users, Biologists, Guests, Administrators
+        </p>
+        <p class="my-2"><b>Pre-conditions and Post-conditions</b>: None</p>
+        <p class="my-2">
+          <b><u>Use</u></b
+          >:
+        </p>
+        <ul class="list-disc ml-6">
+          <li class="my-2">
+            <b>Step 1</b>: The actor selects the “Query CRE” button. The system
+            displays the CRE information searc h interface.
+          </li>
+          <li class="my-2">
+            <b>Step 2</b>: The actor inputs the desired search information (not
+            all fields are mandatory).
+          </li>
+          <li class="ml-6">
+            <b>Input</b>: The fields that can be entered include
+          </li>
+          <ul class="ml-12">
+            <li class="my-2">Unique identifier</li>
+            <li class="my-2">Unique accession number</li>
+            <li class="my-2">Date of update</li>
+            <li class="my-2">Brief description of the CRE</li>
+            <li class="my-2">Keywords</li>
+            <li class="my-2">
+              Common name and/or scientific name of the plant species
+            </li>
+            <li class="my-2">Author name(s) of a relevant report</li>
+            <li class="my-2">Title of the report</li>
+            <li class="my-2">Bibliographic information of the report</li>
+            <li class="my-2">PubMed ID numbers or GenBank accession number</li>
+            <li class="my-2">Sequence</li>
+          </ul>
+          <li class="my-2">
+            <b>Step 2.1</b>: The actor selects “reset” to clear all entered
+            information.
+          </li>
+          <li class="my-2">
+            <b>Step 3</b>: The actor submits the search information to the
+            system. The system returns a list of CREs matching all the search
+            criteria. If no matching CREs are found, the system returns an empty
+            result.
+          </li>
+          <li class="ml-6">
+            <b>Output</b>: The returned CRE information is displayed in a list that
+            includes:
+          </li>
+          <ul class="ml-12">
+            <li class="my-2">AC: Unique accession number</li>
+            <li class="my-2">DT: Date of update</li>
+            <li class="my-2">RD: PubMed ID numbers</li>
+          </ul>
+          <li class="my-2">
+            <b>Step 4</b>: The actor selects the desired Unique accession number. The
+            system displays detailed information about the selected CRE.
+          </li>
+          <li class="ml-6">
+            <b>Output</b>: Detailed CRE information includes:
+          </li>
+          <ul class="ml-12">
+            <li class="my-2">Function label</li>
+            <li class="my-2">Function details</li>
+            <li class="my-2">Unique identifier</li>
+            <li class="my-2">Unique accession number</li>
+            <li class="my-2">Date of update</li>
+            <li class="my-2">Brief description of the CRE</li>
+            <li class="my-2">Keywords</li>
+            <li class="my-2">
+              Common name and/or scientific name of the plant species
+            </li>
+            <li class="my-2">Author name(s) of a relevant report</li>
+            <li class="my-2">Title of the report</li>
+            <li class="my-2">Bibliographic information of the report</li>
+            <li class="my-2">PubMed ID numbers or GenBank accession number</li>
+            <li class="my-2">Sequence</li>
+            <li class="my-2">Note</li>
+          </ul>
+        </ul>
       </div>
 
       <!-- Search for Care Content -->
       <div v-if="selectedOption === 'searchForCare'">
         <h1 class="text-2xl font-bold">Search for Care</h1>
-        <div class="bg-green-600 text-white p-6 rounded-md mb-6">
+        <div class="bg-green-600 text-white p-6 rounded-md my-6">
           <p>
             This function allows all users to access the system and perform
             searches for Cis-regulatory elements (CREs) present in the promoter
@@ -74,7 +155,7 @@
       <!-- Motif Sampler Content -->
       <div v-if="selectedOption === 'motifSampler'" class="mb-5">
         <h1 class="text-2xl font-bold">Motif Sampler</h1>
-        <div class="bg-green-600 text-white p-6 rounded-md mb-6">
+        <div class="bg-green-600 text-white p-6 rounded-md my-6">
           <p>
             Motif discovery refers to motifs identified through computational
             methods. This process involves detecting patterns or sequences in
@@ -84,9 +165,14 @@
             high.
           </p>
         </div>
-        <p class="my-2">Actors: Users, Biologists, Guests, Administrators</p>
-        <p class="my-2">Pre-conditions and Post-conditions: None</p>
-        <p class="my-2">Use:</p>
+        <p class="my-2">
+          <b>Actors</b>: Users, Biologists, Guests, Administrators
+        </p>
+        <p class="my-2"><b>Pre-conditions and Post-conditions</b>: None</p>
+        <p class="my-2">
+          <b><u>Use</u></b
+          >:
+        </p>
         <ul class="list-disc ml-6">
           <li class="my-2">
             <b>Step 1</b>: The actor selects the “QueryCARE” button. The system
