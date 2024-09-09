@@ -4,8 +4,8 @@
       <!-- Logo Section -->
       <a href="/">
         <div class="flex items-center space-x-2">
-          <img src="@/assets/logo.png" alt="CREquest Logo" class="h-10" />
-          <span class="text-2xl font-bold">CREquest</span>
+          <img src="@/assets/logo.png" alt="CREQuest Logo" class="h-10" />
+          <span class="text-2xl font-bold">CREQuest</span>
         </div>
       </a>
 

@@ -103,7 +103,7 @@ function handleReset() {
 <template>
   <div class="min-h-screen flex flex-col items-center bg-gray-50 py-12">
     <div class="bg-white p-8 rounded-lg shadow-md max-w-4xl w-full">
-      <h1 class="text-4xl font-bold text-gray-900 mb-8">Query Care</h1>
+      <h1 class="text-4xl font-bold text-gray-900 mb-8">Query CRE</h1>
       <form @submit.prevent="handleSubmit" class="space-y-6">
         <!-- Unique Identifier -->
         <div class="flex space-x-6">

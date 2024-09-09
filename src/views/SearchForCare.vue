@@ -5,7 +5,7 @@
   >
     <div class="bg-white rounded-lg max-w-6xl w-full">
       <h1 class="text-[48px] font-bold text-custom-green mb-4">
-        SEARCH FOR CARE
+        SEARCH FOR CRE
       </h1>
       <p class="text-[28px] text-gray-600 mb-8">
         Search motifs within the database
@@ -104,7 +104,8 @@
           </span>
         </div>
 
-        <h2 class="text-xl font-bold text-gray-900 mt-8 mb-2">Motifs found</h2>
+        <h2 v-if="motifs.length < 2" class="text-xl font-bold text-gray-900 mt-8 mb-2">{{ motifs.length }} motif found</h2>
+        <h2 v-else class="text-xl font-bold text-gray-900 mt-8 mb-2">{{ motifs.length }} motifs found</h2>
         <button
           @click="exportCsv"
           class="bg-green-600 text-white text-xl py-1 px-5 mb-3 mx-2 rounded-lg text-sm hover:bg-green-600"

@@ -23,6 +23,15 @@
       </li>
       <li>
         <button
+          @click="selectedOption = 'history'"
+          :class="buttonClass('history')"
+          class="w-full text-left"
+        >
+          History
+        </button>
+      </li>
+      <li>
+        <button
           @click="selectedOption = 'motifSampler'"
           :class="buttonClass('motifSampler')"
           class="w-full text-left"
@@ -69,7 +78,7 @@
         <ul class="list-disc ml-6">
           <li class="my-2">
             <b>Step 1</b>: The actor selects the “Query CRE” button. The system
-            displays the CRE information searc h interface.
+            displays the CRE information search interface.
           </li>
           <li class="my-2">
             <b>Step 2</b>: The actor inputs the desired search information (not
@@ -104,8 +113,8 @@
             result.
           </li>
           <li class="ml-6">
-            <b>Output</b>: The returned CRE information is displayed in a list that
-            includes:
+            <b>Output</b>: The returned CRE information is displayed in a list
+            that includes:
           </li>
           <ul class="ml-12">
             <li class="my-2">AC: Unique accession number</li>
@@ -113,8 +122,9 @@
             <li class="my-2">RD: PubMed ID numbers</li>
           </ul>
           <li class="my-2">
-            <b>Step 4</b>: The actor selects the desired Unique accession number. The
-            system displays detailed information about the selected CRE.
+            <b>Step 4</b>: The actor selects the desired Unique accession
+            number. The system displays detailed information about the selected
+            CRE.
           </li>
           <li class="ml-6">
             <b>Output</b>: Detailed CRE information includes:
@@ -150,6 +160,142 @@
             regions of DNA sequence.
           </p>
         </div>
+        <p class="my-2">
+          <b>Actors</b>: Users, Biologists, Guests, Administrators
+        </p>
+        <p class="my-2"><b>Pre-conditions and Post-conditions</b>: None</p>
+        <p class="my-2">
+          <b><u>Use</u></b
+          >:
+        </p>
+        <ul class="list-disc ml-6">
+          <li class="my-2">
+            <b>Step 1</b>: The actor selects the “Search for CRE” button. The
+            system displays the CRE information search interface.
+          </li>
+          <li class="my-2">
+            <b>Step 2</b>: The actor inputs the promoter region.
+          </li>
+          <li class="ml-6"><b>Input</b>: The promoter region sequence.</li>
+          <li class="my-2">
+            <b>Step 2.1</b>: The actor selects “reset” to clear all entered
+            information.
+          </li>
+          <li class="my-2">
+            <b>Step 3</b>: The actor submits the search information to the
+            system. The system returns a list of Cis-regulatory elements (CREs)
+            found in the given DNA promoter region. If no matching CREs are
+            found, the system returns an empty result.
+          </li>
+          <li class="ml-6">
+            <b>Output</b>: The returned CRE information is categorized into two
+            types: function and no-function, includes:
+          </li>
+          <ul class="ml-12">
+            <li class="my-2">Function/No function</li>
+            <li class="my-2">Unique accession number</li>
+            <li class="my-2">Sequence</li>
+          </ul>
+          <li class="my-2">
+            <b>Step 4</b>: The actor selects the Unique accession number. The
+            system displays detailed information about the selected CRE.
+          </li>
+          <li class="my-2">
+            <b>Step 3</b>: The actor submits the search information to the
+            system. The system returns a list of CREs matching all the search
+            criteria. If no matching CREs are found, the system returns an empty
+            result.
+          </li>
+          <li class="ml-6">
+            <b>Output</b>: The returned CRE information is displayed in a list
+            that includes:
+          </li>
+          <ul class="ml-12">
+            <li class="my-2">AC: Unique accession number</li>
+            <li class="my-2">DT: Date of update</li>
+            <li class="my-2">RD: PubMed ID numbers</li>
+          </ul>
+          <li class="my-2">
+            <b>Step 4</b>: The actor selects the desired Unique accession
+            number. The system displays detailed information about the selected
+            CRE.
+          </li>
+          <li class="ml-6">
+            <b>Output</b>: Detailed CRE information includes:
+          </li>
+          <ul class="ml-12">
+            <li class="my-2">Function label</li>
+            <li class="my-2">Function details</li>
+            <li class="my-2">Unique identifier</li>
+            <li class="my-2">Unique accession number</li>
+            <li class="my-2">Date of update</li>
+            <li class="my-2">Brief description of the CRE</li>
+            <li class="my-2">Keywords</li>
+            <li class="my-2">
+              Common name and/or scientific name of the plant species
+            </li>
+            <li class="my-2">Author name(s) of a relevant report</li>
+            <li class="my-2">Title of the report</li>
+            <li class="my-2">Bibliographic information of the report</li>
+            <li class="my-2">PubMed ID numbers or GenBank accession number</li>
+            <li class="my-2">Sequence</li>
+            <li class="my-2">Note</li>
+          </ul>
+          <li class="my-2">
+            <b>Step 4.1</b>: The actor selects the CRE. The system highlights
+            the position of the CRE within the promoter sequence and displays a
+            brief description of the CRE.
+          </li>
+          <li class="ml-6">
+            <b>Output</b>: Description of the motif sequence includes:
+          </li>
+          <ul class="ml-12">
+            <li class="my-2">Short description</li>
+            <li class="my-2">Organism</li>
+          </ul>
+        </ul>
+      </div>
+
+      <div v-if="selectedOption === 'history'">
+        <h1 class="text-2xl font-bold">History</h1>
+        <div class="bg-green-600 text-white p-6 rounded-md my-6">
+          <p>
+            Both biologists and users can view and delete search history after
+            logging in. The search history is only displayed for the “Search For
+            CRE” function.
+          </p>
+        </div>
+        <p class="my-2"><b>Actors</b>: Users, Biologists, Administrators</p>
+        <p class="my-2"><b>Pre-conditions</b>: Logged into the system</p>
+        <p class="my-2"><b>Post-conditions</b>: None</p>
+        <p class="my-2">
+          <b><u>Use</u></b
+          >:
+        </p>
+        <ul class="list-disc ml-6">
+          <li class="my-2">
+            <b>Step 1</b>: The actor selects the “History” button. The system
+            displays the search history interface.
+          </li>
+          <li class="ml-6">
+            <b>Output</b>: The search history interface includes:
+          </li>
+          <ul class="ml-12">
+            <li class="my-2">DNA sequence</li>
+            <li class="my-2">Search date</li>
+            <li class="my-2">Delete</li>
+          </ul>
+          <li class="my-2">
+            <b>Step 2</b>: The actor selects the DNA sequence of the search
+            history they want to review. The system displays the search results
+            interface similar to the one shown in the “Search For CRE” function.
+          </li>
+          <li class="my-2">
+            <b>Step 3</b>: The actor can delete any search history by selecting
+            the “delete” button of that search history. The system confirms the
+            action and deletes the selected search information.
+          </li>
+        </ul>
       </div>
 
       <!-- Motif Sampler Content -->
@@ -254,7 +400,7 @@
       <!-- Biologist Content -->
       <div v-if="selectedOption === 'biologist'">
         <h1 class="text-2xl font-bold">Biologist</h1>
-        <div class="bg-green-600 text-white p-6 rounded-md mb-6">
+        <div class="bg-green-600 text-white p-6 rounded-md my-6">
           <p>
             The biologist can access and view a list of computational motifs
             that need validation. Based on the motifs in this list, they can
@@ -264,6 +410,66 @@
             methods in the “Motif Sampler” function.
           </p>
         </div>
+        <p class="my-2"><b>Actors</b>: Biologist</p>
+        <p class="my-2">
+          <b>Pre-conditions</b>: Logged in with an account assigned the role of
+          biologist
+        </p>
+        <p class="my-2"><b>Post-conditions</b>: None</p>
+        <p class="my-2">
+          <b><u>Use</u></b
+          >:
+        </p>
+        <ul class="list-disc ml-6">
+          <li class="my-2">
+            <b>Step 1</b>: The actor selects the “Biologist” button. The system
+            displays the motif validation interface.
+          </li>
+          <li class="ml-6">
+            <b>Output</b>: The information displayed on the history interface
+            includes:
+          </li>
+          <ul class="ml-12">
+            <li class="my-2">Sequence</li>
+            <li class="my-2">Confirm</li>
+            <li class="my-2">Delete</li>
+          </ul>
+          <li class="my-2">
+            <b>Step 2</b>: If the actor wants to approve a motif, they select
+            the “Confirm” button next to the motif. The system displays a motif
+            information entry interface, where the SQ (Sequence) has already
+            been pre-filled. The actor completes the remaining information
+            required for motif validation.
+          </li>
+          <li class="ml-6">
+            <b>Input</b>: The fields that need to be filled include:
+          </li>
+          <ul class="ml-12">
+            <li class="my-2">AC: Unique accession number</li>
+            <li class="my-2">DT: Date of update</li>
+            <li class="my-2">DE: Brief description of the CRE</li>
+            <li class="my-2">KW: Keywords</li>
+            <li class="my-2">
+              OS: Common name and/or scientific name of the plant species
+            </li>
+            <li class="my-2">RA: Author name(s) of a relevant report</li>
+            <li class="my-2">RT: Title of the report</li>
+            <li class="my-2">RL: Bibliographic information of the report</li>
+            <li class="my-2">
+              RD: PubMed ID numbers or GenBank accession number
+            </li>
+          </ul>
+          <li class="my-2">
+            <b>Step 2.1</b>: If the actor wants to delete a motif, they select
+            the “delete” button next to the motif to be removed. The system
+            confirms the action and deletes the selected motif.
+          </li>
+          <li class="my-2">
+            <b>Step 3</b>: After completing the information, the actor selects
+            the “submit” button to confirm the validation of the motif. The
+            validated motif will be stored with information as a CRE.
+          </li>
+        </ul>
       </div>
     </div>
   </div>
