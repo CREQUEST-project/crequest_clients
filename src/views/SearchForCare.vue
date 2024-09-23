@@ -33,6 +33,28 @@
     </div>
   </div>
   <div v-else>
+    <div v-if="showMinimap" class="fixed top-10 right-10 w-[270px] bg-gray-300 p-2 rounded-lg shadow-md overflow-hidden">
+      <div class="relative w-full h-full bg-gray-100 overflow-hidden rounded p-1 text-[4px] leading-3 font-mono">
+        <span
+          v-for="(char, index) in sequenceChars"
+          :key="index"
+          :style="{ backgroundColor: getBackgroundColor(index) }"
+        >
+          {{ (index + 1) % 10 !== 0 ? char : char + " " }}
+        </span>
+      </div>
+    </div>
+    <div v-if="showReverseMinimap" class="fixed top-10 right-10 w-[270px] bg-gray-300 p-2 rounded-lg shadow-md overflow-hidden">
+      <div class="relative w-full h-full bg-gray-100 overflow-hidden rounded p-1 text-[4px] leading-3 font-mono">
+        <span
+          v-for="(char, index) in reverseSequenceChars"
+          :key="index"
+          :style="{ backgroundColor: getBackgroundColorReverse(index) }"
+        >
+          {{ (index + 1) % 10 !== 0 ? char : char + " " }}
+        </span>
+      </div>
+    </div>
     <div class="flex items-center justify-between p-4 border-b">
       <!-- Tabs -->
       <div class="flex items-center mx-auto space-x-4">
@@ -69,6 +91,8 @@
         <div
           v-if="activeTab === 'sequence'"
           class="bg-gray-100 p-4 rounded-lg font-mono text-lg leading-6"
+          @scroll="updateScrollPosition"
+          ref="contentContainer"
         >
           <span
             v-for="(char, index) in sequenceChars"
@@ -81,6 +105,8 @@
         <div
           v-else
           class="bg-gray-100 p-4 rounded-lg font-mono text-lg leading-6"
+          @scroll="updateScrollPosition2"
+          ref="contentContainer2"
         >
           <span
             v-for="(char, index) in reverseSequenceChars"
@@ -240,7 +266,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, onMounted, onBeforeUnmount } from "vue";
 import getSearchResult from "./../api/SearchResultApi";
 import {
   SearchResultGuest,
@@ -263,6 +289,9 @@ const isLoading = ref(false);
 
 const result = ref<SearchResultGuest | SearchResultUser>();
 
+const showMinimap = ref(false);
+const showReverseMinimap = ref(false);
+
 const sequenceChars = ref();
 const reverseSequenceChars = ref();
 
@@ -275,12 +304,44 @@ const emails = ref<string[]>([""]);
 
 const activeTab = ref("sequence");
 const setActiveTab = (tab: string) => {
+  if (tab === "sequence") {
+    showReverseMinimap.value = false;
+  } else {
+    showMinimap.value = false;
+  }
   activeTab.value = tab;
 };
 
 const goBack = () => {
   showResult.value = false;
 };
+
+const contentContainer = ref<HTMLElement | null>(null);
+const contentContainer2 = ref<HTMLElement | null>(null);
+
+const updateScrollPosition = () => {
+  if (contentContainer.value) {
+    const rect = contentContainer.value.getBoundingClientRect();
+    showMinimap.value = rect.bottom < 30 && activeTab.value === "sequence";
+  }
+};
+
+const updateScrollPosition2 = () => {
+  if (contentContainer2.value) {
+    const rect = contentContainer2.value.getBoundingClientRect();
+    showReverseMinimap.value = rect.bottom < 30 && activeTab.value === "revert-sequence";
+  }
+};
+
+onMounted(() => {
+  window.addEventListener("scroll", updateScrollPosition);
+  window.addEventListener("scroll", updateScrollPosition2);
+});
+
+onBeforeUnmount(() => {
+  window.removeEventListener("scroll", updateScrollPosition);
+  window.removeEventListener("scroll", updateScrollPosition2);
+});
 
 const exportCsv = async () => {
   try {
