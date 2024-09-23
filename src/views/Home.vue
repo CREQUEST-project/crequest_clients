@@ -42,7 +42,32 @@
 </template>
 
 <script setup lang="ts">
-import { useRouter } from 'vue-router'
+import { ref } from "vue";
+import { useRouter } from "vue-router";
 
-const router = useRouter()
+const router = useRouter();
+
+const infos: string[] = ref([
+  {
+    title: "SEARCH INFORMATION ABOUT MOTIFS",
+    description:
+      "The QueryCRE function is accessible to any user. QueryCRE allows users to search information about motifs in the database.",
+  },
+  {
+    title: "Thông tin 2",
+    description: "Description for Thông tin 2",
+  },
+  {
+    title: "Thông tin 3",
+    description: "Description for Thông tin 3",
+  },
+  {
+    title: "Thông tin 4",
+    description: "Description for Thông tin 4",
+  },
+  {
+    title: "Thông tin 5",
+    description: "Description for Thông tin 5",
+  },
+]);
 </script>

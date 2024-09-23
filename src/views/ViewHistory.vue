@@ -43,7 +43,8 @@
           </span>
         </div>
 
-        <h2 class="text-xl font-bold text-gray-900 mt-8 mb-4">Motifs found</h2>
+        <h2 v-if="motifs.length < 2" class="text-xl font-bold text-gray-900 mt-8 mb-2">{{ motifs.length }} motif found</h2>
+        <h2 v-else class="text-xl font-bold text-gray-900 mt-8 mb-2">{{ motifs.length }} motifs found</h2>
         <table class="min-w-full border-collapse">
           <thead>
             <tr>
