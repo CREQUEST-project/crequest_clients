@@ -35,7 +35,7 @@
   <div v-else>
     <div class="flex items-center justify-between p-4 border-b">
       <!-- Tabs -->
-      <div class="flex space-x-4">
+      <div class="flex items-center mx-auto space-x-4">
         <a
           href="#sequence"
           class="text-gray-500 border-b-2 pb-2 transition duration-300"
@@ -60,20 +60,7 @@
 
       <!-- Back Button -->
       <button @click="goBack" class="text-black hover:text-gray-700 transition">
-        <svg
-          class="w-5 h-5"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M15 19l-7-7 7-7"
-          ></path>
-        </svg>
+        <span class="material-symbols-outlined font-bold text-3xl"> undo </span>
       </button>
     </div>
     <div class="min-h-screen py-10 bg-gray-50 flex flex-col items-center">
@@ -104,8 +91,15 @@
           </span>
         </div>
 
-        <h2 v-if="motifs.length < 2" class="text-xl font-bold text-gray-900 mt-8 mb-2">{{ motifs.length }} motif found</h2>
-        <h2 v-else class="text-xl font-bold text-gray-900 mt-8 mb-2">{{ motifs.length }} motifs found</h2>
+        <h2
+          v-if="motifs.length < 2"
+          class="text-xl font-bold text-gray-900 mt-8 mb-2"
+        >
+          {{ motifs.length }} motif found
+        </h2>
+        <h2 v-else class="text-xl font-bold text-gray-900 mt-8 mb-2">
+          {{ motifs.length }} motifs found
+        </h2>
         <button
           @click="exportCsv"
           class="bg-green-600 text-white text-xl py-1 px-5 mb-3 mx-2 rounded-lg text-sm hover:bg-green-600"
@@ -118,24 +112,32 @@
         >
           Send to mail
         </button>
-        <table class="min-w-full border-collapse">
-          <thead>
-            <tr>
-              <th class="px-4 py-2 border text-left">Accession Number</th>
-              <th class="px-4 py-2 border text-left">Motif</th>
-              <th class="px-4 py-2 border text-left">Description</th>
-              <th class="px-4 py-2 border text-left">Function</th>
-            </tr>
-          </thead>
-          <tbody v-if="activeTab === 'sequence'">
-            <tr v-for="(motif, index) in motifs" :key="motif.factor_id">
-              <td
-                class="px-4 py-2 border"
+        <div class="min-w-full">
+          <div class="flex bg-gray-200 font-bold border-b">
+            <div class="w-1/12 px-4 py-2 border">Accession Number</div>
+            <div class="w-3/12 px-4 py-2 border">Motif</div>
+            <div class="w-1/2 px-4 py-2 border">Description</div>
+            <div class="w-1/6 px-4 py-2 border">Function</div>
+          </div>
+
+          <div
+            v-if="activeTab === 'sequence'"
+            class="max-h-screen overflow-y-auto"
+          >
+            <div
+              v-for="(motif, index) in motifs"
+              :key="motif.factor_id"
+              class="flex border-b hover:bg-gray-100"
+            >
+              <!-- Accession Number -->
+              <div
+                class="w-1/12 px-4 py-2 border cursor-pointer text-blue-500"
                 @click="router.push(`/motif-details/${motif.factor_id}`)"
               >
                 {{ motif.factor_id }}
-              </td>
-              <td class="px-4 py-2 border">
+              </div>
+              <!-- Motif -->
+              <div class="w-3/12 px-4 py-2 border">
                 <button
                   :style="{ backgroundColor: motif.color }"
                   class="py-1 px-2 rounded"
@@ -143,17 +145,30 @@
                 >
                   {{ motif.sq }}
                 </button>
-              </td>
-              <td class="px-4 py-2 border">{{ motif.de }}</td>
-              <td class="px-4 py-2 border">
+              </div>
+              <div class="w-1/2 px-4 py-2 border">
+                {{ motif.de }}
+              </div>
+              <div class="w-1/6 px-4 py-2 border">
                 {{ motif.function_label?.label }}
-              </td>
-            </tr>
-          </tbody>
-          <tbody v-else>
-            <tr v-for="(motif, index) in reverseMatches" :key="motif.factor_id">
-              <td class="px-4 py-2 border">{{ motif.factor_id }}</td>
-              <td class="px-4 py-2 border">
+              </div>
+            </div>
+          </div>
+
+          <div v-else class="max-h-screen overflow-y-auto">
+            <div
+              v-for="(motif, index) in reverseMatches"
+              :key="motif.factor_id"
+              class="flex border-b hover:bg-gray-100"
+            >
+              <div
+                class="w-1/12 px-4 py-2 border cursor-pointer text-blue-500"
+                @click="router.push(`/motif-details/${motif.factor_id}`)"
+              >
+                {{ motif.factor_id }}
+              </div>
+              <!-- Motif -->
+              <div class="w-3/12 px-4 py-2 border">
                 <button
                   :style="{ backgroundColor: motif.color }"
                   class="py-1 px-2 rounded"
@@ -161,12 +176,18 @@
                 >
                   {{ motif.sq }}
                 </button>
-              </td>
-              <td class="px-4 py-2 border">{{ motif.de }}</td>
-              <td class="px-4 py-2 border">{{ motif.function_label }}</td>
-            </tr>
-          </tbody>
-        </table>
+              </div>
+              <!-- Description -->
+              <div class="w-1/2 px-4 py-2 border">
+                {{ motif.de }}
+              </div>
+              <!-- Function -->
+              <div class="w-1/6 px-4 py-2 border">
+                {{ motif.function_label?.label }}
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -351,7 +372,7 @@ const submitEmails = async () => {
             ? sequence.value
             : reverseSequenceChars.value.join(""),
       });
-    } 
+    }
 
     if (response.status === 200)
       toast.success(

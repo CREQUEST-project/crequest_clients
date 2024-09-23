@@ -1,44 +1,9 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, computed } from "vue";
 import axios from "./../constants/Axios";
-import { QueryField } from "./../components/QueryField";
-
-interface BodyType {
-  id?: string;
-  de?: string;
-  kw?: string;
-  os?: string;
-  ra?: string;
-  rt?: string;
-  rl?: string;
-  ac?: string;
-  dt?: string;
-  sq?: string;
-  rd?: string;
-}
-
-interface ResponseQueryCre {
-  ac: string;
-  dt: string;
-  de: string;
-  kw: string;
-  os: string;
-  ra: string;
-  rt: string;
-  rl: string;
-  rc: string;
-  rd: string;
-  sq: string;
-  note: string;
-  color: string;
-  id: string;
-}
-
-interface Field {
-  title: string;
-  data: string;
-  update: (value: string) => void;
-}
+import QueryField from "./../components/QueryField.vue";
+import QueryResultModal from "../components/QueryResultModal.vue";
+import { BodyType, ResponseQueryCre, Field } from "./../models/QueryCare";
 
 const showResult = ref(false);
 const result = ref<ResponseQueryCre[]>([]);
@@ -53,6 +18,19 @@ const accessionNumber = ref("");
 const updateDate = ref();
 const sequence = ref("");
 const uniqueAccessionNumber = ref("");
+
+const showModal = ref(false);
+const detailedItem = ref<ResponseQueryCre | null>(null);
+
+const openModal = (item: ResponseQueryCre) => {
+  detailedItem.value = item;
+  showModal.value = true;
+};
+
+const closeModal = () => {
+  showModal.value = false;
+  detailedItem.value = null;
+};
 
 const updateUniqueIdentifier = (value: string) => {
   uniqueIdentifier.value = value;
@@ -101,17 +79,37 @@ const updateUniqueAccessionNumber = (value: string) => {
 const count = ref(0);
 
 const fields: Field[] = [
-    { title: "Unique Identifier", data: uniqueIdentifier.value, update: updateUniqueIdentifier },
-    { title: "Brief Description", data: briefDescription.value, update: updateBriefDescription },
-    { title: "Keywords", data: keywords.value, update: updateKeywords },
-    { title: "Plant Name", data: plantName.value, update: updatePlantName },
-    { title: "Author Name", data: authorName.value, update: updateAuthorName },
-    { title: "Report Title", data: reportTitle.value, update: updateReportTitle },
-    { title: "Bibliographic Info", data: bibliographicInfo.value, update: updateBibliographicInfo },
-    { title: "Accession Number", data: accessionNumber.value, update: updateAccessionNumber },
-    { title: "Update Date", data: updateDate.value, update: updateUpdateDate },
-    { title: "Sequence", data: sequence.value, update: updateSequence },
-    { title: "Unique Accession Number", data: uniqueAccessionNumber.value, update: updateUniqueAccessionNumber },
+  {
+    title: "Unique Identifier",
+    data: uniqueIdentifier.value,
+    update: updateUniqueIdentifier,
+  },
+  {
+    title: "Brief Description",
+    data: briefDescription.value,
+    update: updateBriefDescription,
+  },
+  { title: "Keywords", data: keywords.value, update: updateKeywords },
+  { title: "Plant Name", data: plantName.value, update: updatePlantName },
+  { title: "Author Name", data: authorName.value, update: updateAuthorName },
+  { title: "Report Title", data: reportTitle.value, update: updateReportTitle },
+  {
+    title: "Bibliographic Info",
+    data: bibliographicInfo.value,
+    update: updateBibliographicInfo,
+  },
+  {
+    title: "Accession Number",
+    data: accessionNumber.value,
+    update: updateAccessionNumber,
+  },
+  { title: "Update Date", data: updateDate.value, update: updateUpdateDate },
+  { title: "Sequence", data: sequence.value, update: updateSequence },
+  {
+    title: "Unique Accession Number",
+    data: uniqueAccessionNumber.value,
+    update: updateUniqueAccessionNumber,
+  },
 ];
 
 const chosenFields = ref<Field[]>([]);
@@ -120,14 +118,21 @@ const selectedOption = ref<string | null>(null);
 const addField = (title: string) => {
   const field = fields.find((field) => field.title === title);
   if (field) {
-    chosenFields.value.push(field);
+    if (!chosenFields.value.some((f) => f.title === title)) {
+      chosenFields.value.push({
+        ...field,
+        data: ref(field.data).value,
+      });
+    }
   }
 };
 
-const removeField = (title: string) => {
-  const field = chosenFields.value.find((field) => field.title === title);
-  if (field) {
-    chosenFields.value = chosenFields.value.filter((field) => field.title !== title);
+const removeField = (fieldToRemove: Field) => {
+  const index = chosenFields.value.findIndex(
+    (field) => field.title === fieldToRemove.title
+  );
+  if (index !== -1) {
+    chosenFields.value.splice(index, 1);
   }
 };
 
@@ -137,13 +142,20 @@ const options = [
   { value: "Keywords", label: "Keywords" },
   { value: "Plant Name", label: "Plant Name" },
   { value: "Author Name", label: "Author Name" },
-  { value: "ReportTitle", label: "Report Title" },
+  { value: "Report Title", label: "Report Title" },
   { value: "Bibliographic Info", label: "Bibliographic Info" },
   { value: "Accession Number", label: "Accession Number" },
   { value: "Update Date", label: "Update Date" },
   { value: "Sequence", label: "Sequence" },
   { value: "Unique Accession Number", label: "Unique Accession Number" },
 ];
+
+const availableOptions = computed(() => {
+  return options.filter(
+    (option) =>
+      !chosenFields.value.some((field) => field.title === option.value)
+  );
+});
 
 const handleAddField = () => {
   if (selectedOption.value) {
@@ -190,42 +202,105 @@ const handleSubmit = async () => {
 };
 
 function handleReset() {
-  uniqueIdentifier.value = "";
-  briefDescription.value = "";
-  keywords.value = "";
-  plantName.value = "";
-  authorName.value = "";
-  reportTitle.value = "";
-  bibliographicInfo.value = "";
-  accessionNumber.value = "";
-  updateDate.value = new Date();
+  selectedOption.value = null;
+  chosenFields.value = [];
 }
 </script>
 
 <template>
-    <div>
-      <div class="flex items-center space-x-4">
-        <select v-model="selectedOption" class="border p-2 rounded">
-          <option value="" disabled selected>Select field to add</option>
-          <option v-for="option in options" :key="option.value" :value="option.value">
-            {{ option.label }}
-          </option>
-        </select>
-        <button
-          @click="handleAddField"
-          class="bg-blue-500 text-white px-4 py-2 rounded"
+  <div class="min-h-screen flex flex-col items-center bg-gray-50 py-12">
+    <div class="bg-white p-8 rounded-lg shadow-md max-w-4xl w-full">
+      <h1 class="text-4xl font-bold text-gray-900 mb-8">Query CRE</h1>
+      <select v-model="selectedOption" class="border p-2 rounded">
+        <option
+          v-for="option in availableOptions"
+          :key="option.value"
+          :value="option.value"
         >
-          Add Field
+          {{ option.label }}
+        </option>
+      </select>
+      <button
+        @click="handleAddField"
+        class="bg-blue-500 text-white px-4 py-2 rounded ml-4"
+      >
+        Add Field
+      </button>
+
+      <div class="mt-4">
+        <QueryField
+          v-for="(field, index) in chosenFields"
+          :key="index"
+          :title="field.title"
+          :data="field.data"
+          @update:data="field.update"
+          @removeField="removeField"
+        />
+      </div>
+      <div class="flex justify-center space-x-4 mt-5">
+        <button
+          type="submit"
+          class="bg-custom-green text-white py-2 px-8 rounded-lg hover:bg-green-700 font-semibold disabled:opacity-50"
+          :disabled="chosenFields.length === 0"
+          @click="handleSubmit"
+        >
+          Submit
+        </button>
+        <button
+          type="reset"
+          class="bg-green-600 text-white py-2 px-8 rounded-lg hover:bg-green-700 font-semibold"
+          @click="handleReset"
+        >
+          Reset
         </button>
       </div>
-  
+    </div>
+    <div class="max-w-4xl w-full" v-if="showResult">
+      <h2 class="text-2xl font-bold text-gray-900 mt-8">
+        Results ({{ count }})
+      </h2>
       <div class="mt-4">
-        <h3 class="font-semibold">Selected Fields:</h3>
-        <ul>
-          <li v-for="(field, index) in fields" :key="index" class="p-2 border-b">
-            {{ field.title }}: {{ field.data }}
-          </li>
-        </ul>
+        <div v-for="item in result" :key="item.id" class="p-4 rounded-lg mt-4">
+          <div class="w-full max-w-4xl bg-white p-8 rounded-lg shadow-md">
+            <div class="flex justify-between items-center">
+              <h1 class="text-4xl font-bold text-gray-900 mb-8">
+                {{ item.ac }}
+              </h1>
+              <button>
+                <span
+                  @click="openModal(item)"
+                  class="material-symbols-outlined"
+                >
+                  visibility
+                </span>
+              </button>
+            </div>
+
+            <div class="mb-6">
+              <h2 class="text-lg font-bold text-gray-700">
+                PubMed ID numbers or GenBank accession number
+              </h2>
+              <hr class="border-t-2 border-gray-200 my-2" />
+              <p class="text-base text-gray-900">
+                {{ item.id }}
+              </p>
+            </div>
+
+            <div class="mb-6">
+              <h2 class="text-lg font-bold text-gray-700">Motif sequence</h2>
+              <hr class="border-t-2 border-gray-200 my-2" />
+              <p class="text-base text-gray-900">
+                {{ item.sq }}
+              </p>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
-  </template>
+  </div>
+  <QueryResultModal
+    v-if="showModal"
+    :detailedItem="detailedItem"
+    @closeModal="closeModal"
+  />
+</template>

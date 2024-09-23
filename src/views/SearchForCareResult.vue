@@ -2,9 +2,7 @@
   <div class="min-h-screen py-10 bg-gray-50 flex flex-col items-center">
     <div class="w-full max-w-6xl bg-white p-8 rounded-lg shadow-md">
       <h1 class="text-2xl font-bold text-gray-900 mb-4">Sequence Analysis</h1>
-      <div
-        class="bg-gray-100 p-4 rounded-lg font-mono text-lg leading-6"
-      >
+      <div class="bg-gray-100 p-4 rounded-lg font-mono text-lg leading-6">
         <span
           v-for="(char, index) in sequenceChars"
           :key="index"
@@ -15,32 +13,44 @@
       </div>
 
       <h2 class="text-xl font-bold text-gray-900 mt-8 mb-4">Motifs found</h2>
-      <table class="min-w-full border-collapse">
-        <thead>
-          <tr>
-            <th class="px-4 py-2 border text-left">Accession Number</th>
-            <th class="px-4 py-2 border text-left">Motif</th>
-            <th class="px-4 py-2 border text-left">Description</th>
-            <th class="px-4 py-2 border text-left">Function</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="(motif, index) in motifs" :key="motif.accessionNumber">
-            <td class="px-4 py-2 border">{{ motif.accessionNumber }}</td>
-            <td class="px-4 py-2 border">
-              <button
-                :style="{ backgroundColor: motif.color }"
-                class="py-1 px-2 rounded"
-                @click="toggleHighlight(index)"
-              >
-                {{ motif.sequence }}
-              </button>
-            </td>
-            <td class="px-4 py-2 border">{{ motif.description }}</td>
-            <td class="px-4 py-2 border">{{ motif.function }}</td>
-          </tr>
-        </tbody>
-      </table>
+      <div class="max-h-screen overflow-y-auto">
+        <!-- Header -->
+        <div class="flex bg-gray-200 font-bold text-left border-b">
+          <div class="flex-1 px-4 py-2 border">Accession Number</div>
+          <div class="flex-1 px-4 py-2 border">Motif</div>
+          <div class="flex-1 px-4 py-2 border">Description</div>
+          <div class="flex-1 px-4 py-2 border">Function</div>
+        </div>
+        <!-- Rows -->
+        <div
+          v-for="(motif, index) in motifs"
+          :key="motif.accessionNumber"
+          class="flex border-b"
+        >
+          <!-- Accession Number -->
+          <div class="flex-1 px-4 py-2 border">
+            {{ motif.accessionNumber }}
+          </div>
+          <!-- Motif -->
+          <div class="flex-1 px-4 py-2 border">
+            <button
+              :style="{ backgroundColor: motif.color }"
+              class="py-1 px-2 rounded"
+              @click="toggleHighlight(index)"
+            >
+              {{ motif.sequence }}
+            </button>
+          </div>
+          <!-- Description -->
+          <div class="flex-1 px-4 py-2 border">
+            {{ motif.description }}
+          </div>
+          <!-- Function -->
+          <div class="flex-1 px-4 py-2 border">
+            {{ motif.function }}
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
