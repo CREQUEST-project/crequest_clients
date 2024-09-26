@@ -112,7 +112,13 @@ const fields: Field[] = [
   },
 ];
 
-const chosenFields = ref<Field[]>([]);
+const chosenFields = ref<Field[]>([
+  {
+    title: "Unique Accession Number",
+    data: uniqueAccessionNumber.value,
+    update: updateUniqueAccessionNumber,
+  },
+]);
 const selectedOption = ref<string | null>(null);
 
 const addField = (title: string) => {
@@ -211,22 +217,6 @@ function handleReset() {
   <div class="min-h-screen flex flex-col items-center bg-gray-50 py-12">
     <div class="bg-white p-8 rounded-lg shadow-md max-w-4xl w-full">
       <h1 class="text-4xl font-bold text-gray-900 mb-8">Query CRE</h1>
-      <select v-model="selectedOption" class="border p-2 rounded">
-        <option
-          v-for="option in availableOptions"
-          :key="option.value"
-          :value="option.value"
-        >
-          {{ option.label }}
-        </option>
-      </select>
-      <button
-        @click="handleAddField"
-        class="bg-blue-500 text-white px-4 py-2 rounded ml-4"
-      >
-        Add Field
-      </button>
-
       <div class="mt-4">
         <QueryField
           v-for="(field, index) in chosenFields"
@@ -237,22 +227,41 @@ function handleReset() {
           @removeField="removeField"
         />
       </div>
-      <div class="flex justify-center space-x-4 mt-5">
-        <button
-          type="submit"
-          class="bg-custom-green text-white py-2 px-8 rounded-lg hover:bg-green-700 font-semibold disabled:opacity-50"
-          :disabled="chosenFields.length === 0"
-          @click="handleSubmit"
-        >
-          Submit
-        </button>
-        <button
-          type="reset"
-          class="bg-green-600 text-white py-2 px-8 rounded-lg hover:bg-green-700 font-semibold"
-          @click="handleReset"
-        >
-          Reset
-        </button>
+      <div class="flex justify-between space-x-4 mt-5">
+        <div>
+          <select v-model="selectedOption" class="border p-2 rounded">
+            <option
+              v-for="option in availableOptions"
+              :key="option.value"
+              :value="option.value"
+            >
+              {{ option.label }}
+            </option>
+          </select>
+          <button
+            @click="handleAddField"
+            class="bg-blue-500 text-white px-4 py-2 rounded ml-4"
+          >
+            Add Field
+          </button>
+        </div>
+        <div class="space-x-2">
+          <button
+            type="submit"
+            class="bg-custom-green text-white py-2 px-8 rounded-lg hover:bg-green-700 font-semibold disabled:opacity-50"
+            :disabled="chosenFields.length === 0"
+            @click="handleSubmit"
+          >
+            Submit
+          </button>
+          <button
+            type="reset"
+            class="bg-green-600 text-white py-2 px-8 rounded-lg hover:bg-green-700 font-semibold"
+            @click="handleReset"
+          >
+            Reset
+          </button>
+        </div>
       </div>
     </div>
     <div class="max-w-4xl w-full" v-if="showResult">
