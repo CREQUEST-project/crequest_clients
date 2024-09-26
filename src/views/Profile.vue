@@ -8,7 +8,6 @@
       >
         Profile
       </h1>
-      <!-- Thông tin cá nhân -->
       <div class="flex-1 lg:mr-8">
         <div class="space-y-6">
           <div>
@@ -46,7 +45,6 @@
         </div>
       </div>
 
-      <!-- Ảnh đại diện và nút chỉnh sửa -->
       <div class="flex flex-col items-center mt-8 lg:mt-0 lg:w-2/5">
         <div class="relative mb-6">
           <img
@@ -75,8 +73,56 @@
             EDIT PROFILE
           </button>
           <button
-            @click="changePassword"
+            @click="toggleChangePasswordModal"
             class="bg-green-700 text-white font-bold py-2 px-3 rounded-lg hover:bg-green-800"
+          >
+            CHANGE PASSWORD
+          </button>
+        </div>
+      </div>
+    </div>
+    <div
+      v-if="isChangePasswordModalVisible"
+      class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center"
+    >
+      <div class="bg-white rounded-lg shadow-lg w-96 p-6 relative">
+        <h2 class="text-xl font-semibold text-gray-800 mb-4">
+          Change Password
+        </h2>
+        <button
+          @click="toggleChangePasswordModal"
+          class="absolute top-2 right-2 text-gray-500 hover:text-gray-700"
+        >
+          <span class="material-icons">close</span>
+        </button>
+        <div class="space-y-4">
+          <div>
+            <label class="text-gray-600">Current Password</label>
+            <input
+              type="password"
+              v-model="currentPassword"
+              class="w-full border border-gray-300 rounded-lg mt-2 p-2 outline-none focus:border-green-500"
+            />
+          </div>
+          <div>
+            <label class="text-gray-600">New Password</label>
+            <input
+              type="password"
+              v-model="newPassword"
+              class="w-full border border-gray-300 rounded-lg mt-2 p-2 outline-none focus:border-green-500"
+            />
+          </div>
+          <div>
+            <label class="text-gray-600">Confirm New Password</label>
+            <input
+              type="password"
+              v-model="confirmPassword"
+              class="w-full border border-gray-300 rounded-lg mt-2 p-2 outline-none focus:border-green-500"
+            />
+          </div>
+          <button
+            @click="changePassword"
+            class="bg-green-700 text-white font-bold py-2 px-3 rounded-lg hover:bg-green-800 w-full mt-4"
           >
             CHANGE PASSWORD
           </button>
@@ -97,6 +143,12 @@ const username = ref("");
 const email = ref("");
 const location = ref("");
 const phone = ref("");
+
+const isChangePasswordModalVisible = ref(false);
+
+const currentPassword = ref("");
+const newPassword = ref("");
+const confirmPassword = ref("");
 
 onMounted(async () => {
   await getProfile();
@@ -153,8 +205,39 @@ const editProfile = async () => {
   }
 };
 
-const changePassword = () => {
-  console.log("Change Password clicked");
+const toggleChangePasswordModal = () => {
+  isChangePasswordModalVisible.value = !isChangePasswordModalVisible.value;
+};
+
+const changePassword = async () => {
+  if (newPassword.value !== confirmPassword.value) {
+    toast.error("New passwords do not match!");
+    return;
+  }
+
+  try {
+    const userId = localStorage.getItem("user_id");
+    const response = await axios.put(
+      `/user-info/${userId}/password/change`,
+      {
+        old_password: currentPassword.value,
+        new_password: newPassword.value,
+      },
+      {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+      }
+    );
+    if (response.status === 200) {
+      toast.success("Password changed successfully!");
+      toggleChangePasswordModal();
+      currentPassword.value = "";
+      newPassword.value = "";
+      confirmPassword.value = "";
+    }
+  } catch (error) {
+    toast.error("Failed to change password!");
+    console.error(error);
+  }
 };
 
 const updateProfilePicture = async (event: Event) => {
@@ -188,6 +271,5 @@ const updateProfilePicture = async (event: Event) => {
 </script>
 
 <style scoped>
-/* Thêm một số biểu tượng nếu cần */
 @import url("https://fonts.googleapis.com/icon?family=Material+Icons");
 </style>
