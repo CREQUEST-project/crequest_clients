@@ -28,6 +28,18 @@
         </div>
 
         <div>
+          <label for="username" class="block text-gray-700 text-lg font-semibold mb-2"
+            >Email</label
+          >
+          <input
+            v-model="email"
+            type="email"
+            placeholder="Email"
+            class="w-full border-b-2 border-custom-green py-2 text-lg outline-none focus:border-blue-500"
+          />
+        </div>
+
+        <div>
           <label for="password" class="block text-gray-700 text-lg font-semibold mb-2"
             >Password</label
           >
@@ -74,6 +86,7 @@ import { useToast } from "vue-toastification";
 
 const username = ref("");
 const password = ref("");
+const email = ref("");
 const router = useRouter();
 const toast = useToast();
 
@@ -84,6 +97,7 @@ const submitRegister = async () => {
       {
         user_name: username.value,
         password: password.value,
+        email: email.value,
         user_role_id: 2,
       }
     );
@@ -92,6 +106,7 @@ const submitRegister = async () => {
       router.push("/login");
     }
   } catch (error) {
+    toast.error("Registration failed!");
     console.error(error);
   }
 };

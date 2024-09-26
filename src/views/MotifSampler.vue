@@ -230,10 +230,50 @@
           Reset
         </button>
       </div>
-      <div v-if="showResult" class="flex flex-col mx-auto justify-center items-center mt-4">
-        <h2 class="text-3xl font-bold text-gray-900 mb-8 w-full text-left">Result</h2>
-        <div v-for="(item, index) in result" :key="index">
-          <p>{{ item }}</p>
+      <div
+        v-if="showResult"
+        class="flex flex-col mx-auto justify-center items-center mt-4"
+      >
+        <h2 class="text-3xl font-bold text-gray-900 mb-8 w-full text-left">
+          Result
+        </h2>
+        <div v-if="!isBiologist">
+          <div v-for="(item, index) in result" :key="index">
+            <p>{{ item }}</p>
+          </div>
+        </div>
+        <div v-else>
+          <table class="min-w-full border border-collapse mb-8">
+            <thead>
+              <tr class="bg-gray-200">
+                <th class="p-2 border">
+                  <input
+                    type="checkbox"
+                    v-model="selectAll"
+                    @change="toggleSelectAll"
+                  />
+                </th>
+                <th class="p-2 border text-left">Motif Name</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="(item, index) in result" :key="index">
+                <td class="p-2 border text-center">
+                  <input type="checkbox" v-model="selectedMotifs[index]" />
+                </td>
+                <td class="p-2 border">{{ item }}</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div class="flex justify-end space-x-4">
+            <button
+              @click="handleConfirm"
+              class="bg-green-600 text-white py-2 px-8 rounded-lg hover:bg-green-700 font-semibold"
+            >
+              Confirmation
+            </button>
+          </div>
         </div>
       </div>
     </div>
@@ -244,7 +284,7 @@
 <script setup lang="ts">
 import { ref, computed } from "vue";
 import axios from "./../constants/Axios";
-import { isLoggedIn } from "./../stores/authStore";
+import { isLoggedIn, isBiologist } from "./../stores/authStore";
 import Loading from "./../components/layouts/Loading.vue";
 
 // Input fields
@@ -268,6 +308,25 @@ const isLoading = ref(false);
 
 const result = ref([]);
 const showResult = computed(() => result.value.length > 0);
+
+const selectAll = ref(false); // Biến lưu trạng thái checkbox "select all"
+const selectedMotifs = ref<boolean[]>([]);
+
+const initSelectedMotifs = () => {
+  selectedMotifs.value = result.value.map(() => true); // Mặc định tất cả các motif đều được chọn
+  selectAll.value = true;
+};
+
+const toggleSelectAll = () => {
+  selectedMotifs.value = selectedMotifs.value.map(() => selectAll.value);
+};
+
+const handleConfirm = () => {
+  const selectedMotifNames = result.value.filter(
+    (_, index) => selectedMotifs.value[index]
+  );
+  console.log("Selected motifs:", selectedMotifNames);
+};
 
 function handleFileChange(key: "f" | "b", event: Event) {
   const files = (event.target as HTMLInputElement).files;
@@ -303,6 +362,7 @@ const handleSubmit = async () => {
       });
       result.value = response.data.results;
       console.log("Motif Sampler response:", response.data);
+      initSelectedMotifs();
     } catch (error) {
       console.error("Motif Sampler error:", error);
     } finally {
@@ -317,6 +377,7 @@ const handleSubmit = async () => {
       });
       result.value = response.data.results;
       console.log("Motif Sampler response:", response.data);
+      initSelectedMotifs();
     } catch (error) {
       console.error("Motif Sampler error:", error);
     } finally {

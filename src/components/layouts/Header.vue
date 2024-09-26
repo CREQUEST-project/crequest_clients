@@ -91,7 +91,7 @@
             v-if="dropdownOpen"
             class="absolute top-10 right-0 mt-2 w-48 bg-white text-black rounded-lg shadow-lg z-50"
           >
-            <a href="#" class="block px-4 py-2 hover:bg-gray-200">PROFILE</a>
+            <a href="/profile" class="block px-4 py-2 hover:bg-gray-200">PROFILE</a>
             <a
               @click="logout"
               class="block px-4 py-2 hover:bg-gray-200 text-red-500"
