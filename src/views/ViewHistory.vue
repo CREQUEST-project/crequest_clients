@@ -126,8 +126,7 @@ onBeforeMount(async () => {
   });
   const seq = response1.data.sequences;
   const response = await getSearchResult(
-    seq,
-    user_id ? parseInt(user_id) : undefined
+    seq
   );
   result.value = response;
   showResult.value = true;

@@ -33,8 +33,13 @@
     </div>
   </div>
   <div v-else>
-    <div v-if="showMinimap" class="fixed top-10 right-10 w-[270px] bg-gray-300 p-2 rounded-lg shadow-md overflow-hidden">
-      <div class="relative w-full h-full bg-gray-100 overflow-hidden rounded p-1 text-[4px] leading-3 font-mono">
+    <div
+      v-if="showMinimap"
+      class="fixed top-10 right-10 w-[270px] bg-gray-300 p-2 rounded-lg shadow-md overflow-hidden"
+    >
+      <div
+        class="relative w-full h-full bg-gray-100 overflow-hidden rounded p-1 text-[4px] leading-3 font-mono"
+      >
         <span
           v-for="(char, index) in sequenceChars"
           :key="index"
@@ -44,8 +49,13 @@
         </span>
       </div>
     </div>
-    <div v-if="showReverseMinimap" class="fixed top-10 right-10 w-[270px] bg-gray-300 p-2 rounded-lg shadow-md overflow-hidden">
-      <div class="relative w-full h-full bg-gray-100 overflow-hidden rounded p-1 text-[4px] leading-3 font-mono">
+    <div
+      v-if="showReverseMinimap"
+      class="fixed top-10 right-10 w-[270px] bg-gray-300 p-2 rounded-lg shadow-md overflow-hidden"
+    >
+      <div
+        class="relative w-full h-full bg-gray-100 overflow-hidden rounded p-1 text-[4px] leading-3 font-mono"
+      >
         <span
           v-for="(char, index) in reverseSequenceChars"
           :key="index"
@@ -117,15 +127,30 @@
           </span>
         </div>
 
-        <h2
-          v-if="motifs.length < 2"
-          class="text-xl font-bold text-gray-900 mt-8 mb-2"
-        >
-          {{ motifs.length }} motif found
-        </h2>
-        <h2 v-else class="text-xl font-bold text-gray-900 mt-8 mb-2">
-          {{ motifs.length }} motifs found
-        </h2>
+        <div v-if="activeTab === 'sequence'">
+          <h2
+            v-if="count < 2"
+            class="text-xl font-bold text-gray-900 mt-8 mb-2"
+          >
+            {{ count }} motif found
+          </h2>
+          <h2 v-else class="text-xl font-bold text-gray-900 mt-8 mb-2">
+            {{ count }} motifs found
+          </h2>
+        </div>
+
+        <div v-else>
+          <h2
+            v-if="reverse_count < 2"
+            class="text-xl font-bold text-gray-900 mt-8 mb-2"
+          >
+            {{ reverse_count }} motif found
+          </h2>
+          <h2 v-else class="text-xl font-bold text-gray-900 mt-8 mb-2">
+            {{ reverse_count }} motifs found
+          </h2>
+        </div>
+
         <button
           @click="exportCsv"
           class="bg-green-600 text-white text-xl py-1 px-5 mb-3 mx-2 rounded-lg text-sm hover:bg-green-600"
@@ -140,9 +165,10 @@
         </button>
         <div class="min-w-full">
           <div class="flex bg-gray-200 font-bold border-b">
+            <div class="w-1/12 px-4 py-2 border"></div>
             <div class="w-1/12 px-4 py-2 border">Accession Number</div>
             <div class="w-3/12 px-4 py-2 border">Motif</div>
-            <div class="w-1/2 px-4 py-2 border">Description</div>
+            <div class="w-5/12 px-4 py-2 border">Description</div>
             <div class="w-1/6 px-4 py-2 border">Function</div>
           </div>
 
@@ -156,6 +182,9 @@
               class="flex border-b hover:bg-gray-100"
             >
               <!-- Accession Number -->
+              <div class="w-1/12 px-4 py-2 border">
+                {{ index + 1 }}
+              </div>
               <div
                 class="w-1/12 px-4 py-2 border cursor-pointer text-blue-500"
                 @click="router.push(`/motif-details/${motif.factor_id}`)"
@@ -172,7 +201,7 @@
                   {{ motif.sq }}
                 </button>
               </div>
-              <div class="w-1/2 px-4 py-2 border">
+              <div class="w-5/12 px-4 py-2 border">
                 {{ motif.de }}
               </div>
               <div class="w-1/6 px-4 py-2 border">
@@ -302,6 +331,9 @@ const motifs = ref<Match[]>([]);
 const showModal = ref(false);
 const emails = ref<string[]>([""]);
 
+const count = ref(0);
+const reverse_count = ref(0);
+
 const activeTab = ref("sequence");
 const setActiveTab = (tab: string) => {
   if (tab === "sequence") {
@@ -329,7 +361,8 @@ const updateScrollPosition = () => {
 const updateScrollPosition2 = () => {
   if (contentContainer2.value) {
     const rect = contentContainer2.value.getBoundingClientRect();
-    showReverseMinimap.value = rect.bottom < 30 && activeTab.value === "revert-sequence";
+    showReverseMinimap.value =
+      rect.bottom < 30 && activeTab.value === "revert-sequence";
   }
 };
 
@@ -350,12 +383,14 @@ const exportCsv = async () => {
       const token = localStorage.getItem("token");
       response = await axios.post(
         "/user/cre/export-excel",
-        {
-          sequence:
-            activeTab.value === "sequence"
-              ? sequence.value
-              : reverseSequenceChars.value.join(""),
-        },
+        [
+          {
+            sequence:
+              activeTab.value === "sequence"
+                ? sequence.value
+                : reverseSequenceChars.value.join(""),
+          },
+        ],
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -366,12 +401,14 @@ const exportCsv = async () => {
     } else {
       response = await axios.post(
         "/guest/cre/export-excel",
-        {
-          sequence:
-            activeTab.value === "sequence"
-              ? sequence.value
-              : reverseSequenceChars.value.join(""),
-        },
+        [
+          {
+            sequence:
+              activeTab.value === "sequence"
+                ? sequence.value
+                : reverseSequenceChars.value.join(""),
+          },
+        ],
         {
           responseType: "blob",
         }
@@ -465,6 +502,8 @@ const submitSearch = async () => {
   forwardMatches.value = result.value.forward_strand_matches;
   motifs.value = result.value.forward_strand_matches;
   reverseMatches.value = result.value.reverse_strand_matches;
+  count.value = result.value.forward_strand_matches.length;
+  reverse_count.value = result.value.reverse_strand_matches.length;
 };
 
 const getBackgroundColor = (index: number) => {
