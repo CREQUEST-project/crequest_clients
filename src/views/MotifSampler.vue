@@ -286,7 +286,9 @@ import { ref, computed } from "vue";
 import axios from "./../constants/Axios";
 import { isLoggedIn, isBiologist } from "./../stores/authStore";
 import Loading from "./../components/layouts/Loading.vue";
+import { useToast } from "vue-toastification";
 
+const toast = useToast();
 // Input fields
 const inputFiles = ref<{ f: File | null; b: File | null }>({
   f: null,
@@ -321,11 +323,29 @@ const toggleSelectAll = () => {
   selectedMotifs.value = selectedMotifs.value.map(() => selectAll.value);
 };
 
-const handleConfirm = () => {
+const handleConfirm = async () => {
   const selectedMotifNames = result.value.filter(
     (_, index) => selectedMotifs.value[index]
   );
   console.log("Selected motifs:", selectedMotifNames);
+  try {
+    const token = localStorage.getItem("token");
+    const response = await axios.post(
+      `/biologist/computational-motifs/save`,
+      selectedMotifNames,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    if (response.status === 200) {
+      toast.success("Motifs added successfully");
+    }
+  } catch (error) {
+    toast.error("Error");
+    console.error("Search failed:", error);
+  }
 };
 
 function handleFileChange(key: "f" | "b", event: Event) {
