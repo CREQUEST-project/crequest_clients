@@ -1,3 +1,5 @@
+import { Ref } from "vue";
+
 export interface BodyType {
   id?: string;
   de?: string;
@@ -31,6 +33,7 @@ export interface ResponseQueryCre {
 
 export interface Field {
   title: string;
-  data: string;
+  data: Ref<string>;
   update: (value: string) => void;
+  status: boolean;
 }

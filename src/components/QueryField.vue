@@ -1,69 +1,42 @@
 <script setup lang="ts">
-import { defineProps, defineEmits, ref, watch } from "vue";
-import Datepicker from "vue3-datepicker";
+import { defineProps, defineEmits,ref, watch } from "vue";
 
 const props = defineProps({
-  title: String,
-  data: {
+  modelValue: {
     type: String,
     required: true,
   },
+  title: String,
 });
 
-const emit = defineEmits(["update:data", "removeField"]);
+const emit = defineEmits(["update:modelValue"]);
+const localValue = ref(props.modelValue);
 
-const localData = ref<string | Date>(
-  props.title === "Update Date" ? new Date(props.data) : props.data
-);
+watch(localValue, (newValue) => {
+  emit('update:modelValue', newValue);
+});
 
 watch(
-  () => props.data,
-  (newVal) => {
-    if (props.title === "Update Date") {
-      localData.value = new Date(newVal);
-    } else {
-      localData.value = newVal;
-    }
+  () => props.modelValue,
+  (value) => {
+    console.log("value", value);
+    localValue.value = value;
   }
 );
-
-watch(localData, (newValue) => {
-  if (props.title === "Update Date" && newValue instanceof Date) {
-    emit("update:data", newValue.toISOString().split("T")[0]);
-  } else {
-    emit("update:data", newValue);
-  }
-});
-
-const handleRemove = () => {
-  emit("removeField", { title: props.title, data: localData.value });
-};
 </script>
 
 <template>
   <div class="flex items-center justify-between">
-    <label class="text-lg font-semibold text-gray-700" :for="title">{{
+    <label class="text-md font-semibold text-gray-700" :for="title">{{
       title
     }}</label>
-    <div class="w-3/4 flex items-center">
-      <Datepicker
-        v-if="title === 'Update Date'"
-        v-model="localData"
-        :format="'YYYY-MM-DD'"
-        :class="'border w-full border-gray-300 rounded-lg p-3 mt-2 outline-none focus:border-custom-green'"
-      />
+    <div class="w-[70%] flex items-center">
       <input
-        v-else
-        v-model="localData"
+        v-model="localValue"
         :placeholder="title"
         type="text"
         class="border w-full border-gray-300 rounded-lg p-3 mt-2 outline-none focus:border-custom-green"
       />
-      <button @click="handleRemove">
-        <span class="material-symbols-outlined ml-2 text-red-500">
-          delete
-        </span>
-      </button>
     </div>
   </div>
 </template>
