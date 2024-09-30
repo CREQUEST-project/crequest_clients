@@ -25,24 +25,15 @@ const closeModal = () => {
           <h1 class="text-4xl font-bold text-gray-900 mb-8">
             {{ detailedItem.ac }}
           </h1>
-
-          <!-- <div class="mb-6">
-                <h2 class="text-lg font-bold text-gray-700">Function label</h2>
-                <hr class="border-t-2 border-gray-200 my-2" />
-                <p class="text-base text-gray-900">
-                  {{ detailedItem.functionLabel }}
-                </p>
-              </div>
-
-              <div class="mb-6">
-                <h2 class="text-lg font-bold text-gray-700">
-                  Function details
-                </h2>
-                <hr class="border-t-2 border-gray-200 my-2" />
-                <p class="text-base text-gray-900">
-                  {{ detailedItem.functionDetails }}
-                </p>
-              </div> -->
+          <div class="mb-6">
+            <h2 class="text-lg font-bold text-gray-700">
+              Unique identifier of the motif
+            </h2>
+            <hr class="border-t-2 border-gray-200 my-2" />
+            <p class="text-base text-gray-900">
+              {{ detailedItem.id }}
+            </p>
+          </div>
 
           <!-- Date of Update -->
           <div class="mb-6">
@@ -120,7 +111,7 @@ const closeModal = () => {
             </h2>
             <hr class="border-t-2 border-gray-200 my-2" />
             <p class="text-base text-gray-900">
-              {{ detailedItem.id }}
+              {{ detailedItem.rd }}
             </p>
           </div>
 

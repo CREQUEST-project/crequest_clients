@@ -1,9 +1,13 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import axios from "./../constants/Axios";
+import { AxiosError } from "axios";
 import QueryField from "./../components/QueryField.vue";
 import QueryResultModal from "../components/QueryResultModal.vue";
 import { BodyType, ResponseQueryCre, Field } from "./../models/QueryCare";
+import { useToast } from "vue-toastification";
+
+const toast = useToast();
 
 const showResult = ref(false);
 const result = ref<ResponseQueryCre[]>([]);
@@ -165,7 +169,15 @@ const handleSubmit = async () => {
       count.value = response.data.count;
     }
   } catch (error) {
-    console.error(error);
+    if (error instanceof AxiosError) {
+      if (error.response && error.response.data && error.response.data.detail) {
+        toast.error(error.response.data.detail[0].msg);
+      } else {
+        toast.error("Unknown error occurred");
+      }
+    } else {
+      toast.error("An unexpected error occurred");
+    }
   }
 };
 
@@ -308,7 +320,7 @@ const formatDate = (dateString: string): string => {
               </h2>
               <hr class="border-t-2 border-gray-200 my-2" />
               <p class="text-base text-gray-900">
-                {{ item.id }}
+                {{ item.rd }}
               </p>
             </div>
 
