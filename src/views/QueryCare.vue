@@ -14,7 +14,7 @@ const plantName = ref("");
 const authorName = ref("");
 const reportTitle = ref("");
 const bibliographicInfo = ref("");
-const updateDate = ref();
+const updateDate = ref("");
 const sequence = ref("");
 const uniqueAccessionNumber = ref("");
 const pubMedId = ref("");
@@ -146,7 +146,7 @@ const handleSubmit = async () => {
     if (reportTitle.value) body.rt = reportTitle.value;
     if (bibliographicInfo.value) body.rl = bibliographicInfo.value;
     if (pubMedId.value) body.rd = pubMedId.value;
-    if (updateDate.value) body.dt = updateDate.value;
+    if (updateDate.value) body.dt = formatDate(updateDate.value);
 
     if (!user_id) {
       const response = await axios.post("/guest/query-cre", body);
@@ -189,6 +189,35 @@ const selectPerField = (title: string) => {
     field.status = !field.status;
     onToggleSelectFields();
   }
+};
+
+const monthNames = [
+  "Jan",
+  "Feb",
+  "Mar",
+  "Apr",
+  "May",
+  "Jun",
+  "Jul",
+  "Aug",
+  "Sep",
+  "Oct",
+  "Nov",
+  "Dec",
+];
+
+const formatDate = (dateString: string): string => {
+  const date = new Date(dateString);
+  if (isNaN(date.getTime())) {
+    return "Invalid Date";
+  }
+
+  const day = date.getDate().toString().padStart(2, "0");
+
+  const month = monthNames[date.getMonth()];
+  const year = date.getFullYear();
+
+  return `${day}-${month}-${year}`;
 };
 </script>
 

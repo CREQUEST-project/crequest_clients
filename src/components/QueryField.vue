@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { defineProps, defineEmits,ref, watch } from "vue";
+import { defineProps, defineEmits, ref, watch } from "vue";
 
 const props = defineProps({
   modelValue: {
@@ -13,7 +13,7 @@ const emit = defineEmits(["update:modelValue"]);
 const localValue = ref(props.modelValue);
 
 watch(localValue, (newValue) => {
-  emit('update:modelValue', newValue);
+  emit("update:modelValue", newValue);
 });
 
 watch(
@@ -32,6 +32,14 @@ watch(
     }}</label>
     <div class="w-[70%] flex items-center">
       <input
+        v-if="title === 'Update Date'"
+        v-model="localValue"
+        :placeholder="title"
+        type="date"
+        class="border w-full border-gray-300 rounded-lg p-3 mt-2 outline-none focus:border-custom-green"
+      />
+      <input
+        v-else
         v-model="localValue"
         :placeholder="title"
         type="text"
