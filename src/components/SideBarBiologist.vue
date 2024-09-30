@@ -1,13 +1,20 @@
 <template>
-  <div class="w-1/5 bg-gray-100 p-4 border-r">
+  <div class="min-h-[calc(100vh-80px)] w-1/5 bg-gray-100 p-4 border-r">
     <!-- Search Bar -->
     <div class="mb-4">
       <input
         type="text"
-        :value="searchTerm"
+        v-model="searchTerm"
         placeholder="Enter motif"
         class="w-full p-2 border rounded-md"
       />
+    </div>
+
+    <div v-if="listMotifs.length === 0" class="text-center">
+      <p>No motifs found</p>
+      <button class="bg-green-500 text-white font-bold py-2 px-4 rounded-lg mt-4" @click="addNewMotif">
+        Add New Motif: {{ searchTerm }}
+      </button>
     </div>
 
     <!-- Motif List -->
@@ -32,23 +39,71 @@
 </template>
 
 <script setup lang="ts">
+import { ref, watch } from "vue";
 import { MotifName } from "../models/Biologist";
+import axios from "../constants/Axios";
+import { useToast } from "vue-toastification";
 
-defineProps<{
-  searchTerm: String,
-  listMotifs: MotifName[],
-  selectedMotif: MotifName | null,
+const toast = useToast();
+
+const props = defineProps<{
+  searchTerm: string;
+  listMotifs: MotifName[];
+  selectedMotif: MotifName | null;
 }>();
 
-const emit = defineEmits(["selectMotif", "removeMotif"]);
+const addNewMotif = async () => {
+  try {
+    const token = localStorage.getItem("token");
+    const response = await axios.post(
+      `/biologist/computational-motifs/save`,
+      [searchTerm.value],
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    if (response.status === 200) {
+      toast.success("Motif added successfully");
+      searchTerm.value = "";
+    }
+  } catch (error) {
+    console.error("Search failed:", error);
+  }
+};
+
+const searchTerm = ref(props.searchTerm);
+
+const emit = defineEmits(["selectMotif", "removeMotif", "update:listMotifs", "update:searchTerm"]);
+
+watch(searchTerm, async (newTerm) => {
+  emit('update:searchTerm', newTerm);
+  try {
+    const token = localStorage.getItem("token");
+    const response = await axios.post(
+      `/biologist/computational-motifs/search`,
+      {
+        sequence: newTerm,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    emit("update:listMotifs", response.data.data);
+  } catch (error) {
+    console.error("Search failed:", error);
+  }
+});
 
 function selectMotif(motif: MotifName) {
-  // Phát sự kiện để thông báo cho component cha cập nhật selectedMotif
-  emit('selectMotif', motif);
+  emit("selectMotif", motif);
 }
 
 function removeMotif(motif: MotifName) {
-  // Phát sự kiện để thông báo cho component cha xóa motif
-  emit('removeMotif', motif);
+  emit("removeMotif", motif);
 }
 </script>

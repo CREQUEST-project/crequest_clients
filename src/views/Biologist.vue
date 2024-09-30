@@ -6,6 +6,8 @@
       :selectedMotif="selectedMotif"
       @selectMotif="selectMotif"
       @removeMotif="removeMotif"
+      @update:list-motifs="updateListMotifs"
+      @update:search-term="updateSearchTerm"
     />
 
     <!-- Main Content - Form for Editing Motif -->
@@ -27,9 +29,7 @@
               />
             </div>
             <div>
-              <label for="ac" class="block"
-                >Accession number*</label
-              >
+              <label for="ac" class="block">Accession number*</label>
               <input
                 type="text"
                 id="ac"
@@ -106,9 +106,7 @@
             ></textarea>
           </div>
           <div class="mb-4">
-            <label for="rl" class="block"
-              >RC</label
-            >
+            <label for="rl" class="block">RC</label>
             <textarea
               id="rl"
               v-model="selectedMotifToValidate.rc"
@@ -219,6 +217,14 @@ const selectMotif = (motif: MotifName) => {
   };
 };
 
+const updateListMotifs = (motifs: MotifName[]) => {
+  listMotifs.value = motifs;
+};
+
+const updateSearchTerm = (term: string) => {
+  searchTerm.value = term;
+};
+
 const removeMotif = async (motif: MotifName) => {
   isLoading.value = true;
   try {
@@ -232,11 +238,17 @@ const removeMotif = async (motif: MotifName) => {
     );
     if (response.status === 200) {
       const token = localStorage.getItem("token");
-      const response = await axios.get("/biologist/computational-motifs", {
-        headers: {
-          Authorization: `Bearer ${token}`,
+      const response = await axios.post(
+        `/biologist/computational-motifs/search`,
+        {
+          sequence: searchTerm.value,
         },
-      });
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
       toast.success("Motif deleted successfully");
       listMotifs.value = response.data.data;
       selectedMotif.value = null;
