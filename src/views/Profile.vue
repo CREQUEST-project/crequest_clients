@@ -70,7 +70,7 @@
             @click="editProfile"
             class="bg-green-700 text-white font-bold py-2 px-3 rounded-lg hover:bg-green-800"
           >
-            EDIT PROFILE
+            SAVE PROFILE
           </button>
           <button
             @click="toggleChangePasswordModal"
