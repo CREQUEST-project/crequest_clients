@@ -1,6 +1,7 @@
 <script setup lang="ts">
+import { ResponseQueryCre } from '../models/QueryCare';
 defineProps({
-  detailedItem: Object,
+  detailedItem: Object as () => ResponseQueryCre | null,
 });
 
 const emit = defineEmits(["closeModal"]);
@@ -14,14 +15,14 @@ const closeModal = () => {
   <div
     class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50"
   >
-    <div class="bg-white p-6 max-h-[80%] max-w-3xl w-full overflow-y-auto">
+    <div class="bg-white p-6 max-h-[80%] max-w-3xl w-full relative">
       <div class="flex flex-end items-center mb-4">
-        <button @click="closeModal" class="text-gray-500 hover:text-gray-800">
+        <button @click="closeModal" class="text-gray-500 hover:text-gray-800 absolute top-4 right-4">
           <span class="material-symbols-outlined"> close </span>
         </button>
       </div>
       <div v-if="detailedItem">
-        <div class="w-full max-w-4xl bg-white p-8">
+        <div class="w-full max-w-4xl bg-white p-8 max-h-[70vh] overflow-y-auto custom-scroll">
           <h1 class="text-4xl font-bold text-gray-900 mb-8">
             {{ detailedItem.ac }}
           </h1>
@@ -128,3 +129,31 @@ const closeModal = () => {
     </div>
   </div>
 </template>
+
+<style>
+/* Tùy chỉnh thanh cuộn */
+.custom-scroll::-webkit-scrollbar {
+  width: 8px;
+}
+
+.custom-scroll::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+.custom-scroll::-webkit-scrollbar-thumb {
+  background-color: #888;
+  border-radius: 10px;
+  border: 2px solid #f1f1f1;
+}
+
+.custom-scroll::-webkit-scrollbar-thumb:hover {
+  background-color: #888;
+}
+
+/* Firefox */
+.custom-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: #888 #f1f1f1;
+}
+</style>
