@@ -123,6 +123,8 @@ onMounted(() => {
     } else {
       isBiologist.value = false;
     }
+  } else {
+    isLoggedIn.value = false;
   }
 });
 

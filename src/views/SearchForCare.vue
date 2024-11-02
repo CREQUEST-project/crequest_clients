@@ -216,6 +216,9 @@
               :key="motif.factor_id"
               class="flex border-b hover:bg-gray-100"
             >
+              <div class="w-1/12 px-4 py-2 border">
+                {{ index + 1 }}
+              </div>
               <div
                 class="w-1/12 px-4 py-2 border cursor-pointer text-blue-500"
                 @click="router.push(`/motif-details/${motif.factor_id}`)"
@@ -379,7 +382,7 @@ onBeforeUnmount(() => {
 const exportCsv = async () => {
   try {
     let response;
-    if (isLoggedIn) {
+    if (isLoggedIn.value) {
       const token = localStorage.getItem("token");
       response = await axios.post(
         "/user/cre/export-excel",
@@ -445,7 +448,7 @@ const submitEmails = async () => {
 
   try {
     let response;
-    if (isLoggedIn) {
+    if (isLoggedIn.value) {
       const token = localStorage.getItem("token");
       response = await axios.post(
         "/user/cre/export-excel/send-email",
