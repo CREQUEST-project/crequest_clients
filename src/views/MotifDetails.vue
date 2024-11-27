@@ -6,17 +6,17 @@
       </h1>
 
       <!-- Function Label -->
-      <div class="mb-6">
+      <div v-if="motifData.function_label" class="mb-6">
         <h2 class="text-lg font-bold text-gray-700">Function label</h2>
         <hr class="border-t-2 border-gray-200 my-2" />
-        <p class="text-base text-gray-900">{{ motifData.function_label }}</p>
+        <p class="text-base text-gray-900">{{ motifData.function_label?.label }}</p>
       </div>
 
       <!-- Function Details -->
-      <div class="mb-6">
+      <div v-if="motifData.function_label" class="mb-6">
         <h2 class="text-lg font-bold text-gray-700">Function details</h2>
         <hr class="border-t-2 border-gray-200 my-2" />
-        <p class="text-base text-gray-900">{{ motifData.function_details }}</p>
+        <p class="text-base text-gray-900">{{ motifData.function_label?.detail_label }}</p>
       </div>
 
       <!-- Unique Accession Number -->
@@ -109,6 +109,11 @@ import { ref, onBeforeMount } from "vue";
 import axios from "./../constants/Axios";
 import { useRouter } from "vue-router";
 
+interface FunctionLabel {
+  label: string;
+  detail_label: string;
+}
+
 interface MotifData {
   ac: string;
   dt: string;
@@ -120,8 +125,7 @@ interface MotifData {
   rt: string;
   id: string;
   sq: string;
-  function_label?: string;
-  function_details?: string;
+  function_label?: FunctionLabel;
 }
 const accessionNumber = useRouter().currentRoute.value.params.id;
 
