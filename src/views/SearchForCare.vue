@@ -18,6 +18,12 @@
       ></textarea>
       <div class="flex justify-center space-x-6">
         <button
+          @click="sequence = demoSequence"
+          class="bg-green-600 text-white py-3 px-10 rounded-lg text-2xl hover:bg-green-700"
+        >
+          Demo
+        </button>
+        <button
           @click="submitSearch"
           class="bg-custom-green text-white py-3 px-10 rounded-lg text-2xl hover:bg-green-800"
         >
@@ -314,6 +320,7 @@ import Loading from "./../components/layouts/Loading.vue";
 const router = useRouter();
 
 const sequence = ref("");
+const demoSequence = "CTAATCTTATGCATTTAGCAGTACAAATTCAAAAATTTCCCATTTTTATTCATGAATCATACCATTATATATTAACTAAATCCAAGGTAAAAAAAAGGTATGAAAGCTCTATAGTAAGTAAAATATAAATTCCCCATAAGGAAAGGGCCAAGTCCACCAGGCAAGTAAAATGAGCAAGCACCACTCCACCATCACACAATTTCACTCATAGATAACGATAAGATTCATGGAATTATCTTCCACGTGGCATTATTCCAGCGGTTCAAGCCGATAAGGGTCTCAACACCTCTCCTTAGGCCTTTGTGGCCGTTACCAAGTAAAATTAACCTCACACATATCCACACTCAAAATCCAACGGTGTAGATCCTAGTCCACTTGAATCTCATGTATCCTAGACCCTCCGATCACTCCAAAGCTTGTTCTCATTGTTGTTATCATTATATATAGATGACCAAAGCACTAGACCAAACCTCAGTCACACAAAGAGTAAAGAAGAACAA";
 
 const showResult = ref(false);
 const toast = useToast();
@@ -334,6 +341,7 @@ const motifs = ref<Match[]>([]);
 const showModal = ref(false);
 const emails = ref<string[]>([""]);
 
+const newTurnOnMotif = ref<Match>(null);
 const count = ref(0);
 const reverse_count = ref(0);
 

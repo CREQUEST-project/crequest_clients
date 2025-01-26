@@ -12,9 +12,10 @@
 
     <div v-if="listMotifs.length === 0" class="text-center">
       <p>No motifs found</p>
-      <button class="bg-green-500 text-white font-bold py-2 px-4 rounded-lg mt-4" @click="addNewMotif">
+      <button v-if="searchTerm.length > 0" class="bg-green-500 text-white font-bold py-2 px-4 rounded-lg mt-4" @click="addNewMotif">
         Add New Motif: {{ searchTerm }}
       </button>
+      <p v-else>Please enter motif!</p>
     </div>
 
     <!-- Motif List -->
