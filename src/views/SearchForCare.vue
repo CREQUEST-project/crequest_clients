@@ -341,7 +341,6 @@ const motifs = ref<Match[]>([]);
 const showModal = ref(false);
 const emails = ref<string[]>([""]);
 
-const newTurnOnMotif = ref<Match>(null);
 const count = ref(0);
 const reverse_count = ref(0);
 
